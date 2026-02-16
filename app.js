@@ -1,68 +1,60 @@
-let myStory = JSON.parse(localStorage.getItem('myStoryData')) || [];
+let myData = JSON.parse(localStorage.getItem('mySpaceData')) || [];
+let currentPage = 'study';
 
-function captureThought() {
-    const text = document.getElementById('mainInput').value;
-    const type = document.getElementById('entryType').value;
+function changePage(pageId, title) {
+    currentPage = pageId;
+    document.getElementById('page-title').innerText = title;
     
-    if(!text) return alert("Your mind isn't empty! Write something down.");
+    // Customize placeholder based on page
+    const input = document.getElementById('mainInput');
+    const placeholders = {
+        study: "What did you learn today?",
+        ideas: "Capture that spark...",
+        goals: "What is the next big step?",
+        wins: "Celebrate a small victory!",
+        growth: "What needs to be better tomorrow?",
+        alerts: "EMI or Deadline? (Format: Name - Date)"
+    };
+    input.placeholder = placeholders[pageId];
+    renderPage();
+}
+
+function saveEntry() {
+    const text = document.getElementById('mainInput').value;
+    if(!text) return;
 
     const entry = {
         id: Date.now(),
-        date: new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        category: currentPage,
         content: text,
-        type: type,
-        // The "Teacher" element: A self-reflection question
-        reflection: prompt("Teacher's Question: How will you use this information tomorrow?")
+        date: new Date().toLocaleDateString(),
+        timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
     };
 
-    myStory.unshift(entry); // Newest thoughts at the top
-    saveAndRender();
+    myData.unshift(entry);
+    localStorage.setItem('mySpaceData', JSON.stringify(myData));
     document.getElementById('mainInput').value = '';
+    renderPage();
 }
 
-function saveAndRender() {
-    localStorage.setItem('myStoryData', JSON.stringify(myStory));
-    const feed = document.getElementById('timeline-feed');
-    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+function renderPage() {
+    const feed = document.getElementById('page-feed');
+    const filteredData = myData.filter(item => item.category === currentPage);
     
-    // FILTER LOGIC: Only show items that match the search
-    const filteredStory = myStory.filter(item => 
-        item.content.toLowerCase().includes(searchTerm) || 
-        item.type.toLowerCase().includes(searchTerm) ||
-        (item.reflection && item.reflection.toLowerCase().includes(searchTerm))
-    );
-
-    feed.innerHTML = filteredStory.map(item => `
-        <div class="feed-card ${item.type}">
-            <div class="card-header">
-                <span class="type-tag">${item.type.toUpperCase()}</span>
-                <span class="time">${item.date} • ${item.time}</span>
-            </div>
-            <div class="content">${item.content}</div>
-            ${item.reflection ? `<div class="mentor-note"><strong>Application:</strong> ${item.reflection}</div>` : ''}
+    feed.innerHTML = filteredData.map(item => `
+        <div class="card ${item.category}">
+            <small>${item.date} • ${item.timestamp}</small>
+            <p>${item.content}</p>
             <button class="del-btn" onclick="deleteEntry(${item.id})">×</button>
         </div>
     `).join('');
-
-    // If search returns nothing, show a helpful message
-    if (filteredStory.length === 0 && searchTerm !== "") {
-        feed.innerHTML = `<p style="text-align:center; color:#b2bec3;">No memories found matching "${searchTerm}"</p>`;
-    }
-
-    updateGreeting();
-}
-function updateGreeting() {
-    const greetings = ["Keep growing.", "Stay curious.", "Focus on the process.", "Learning is a superpower."];
-    document.getElementById('mentor-greeting').innerText = greetings[Math.floor(Math.random() * greetings.length)];
 }
 
 function deleteEntry(id) {
-    if(confirm("Are you sure you want to remove this memory?")) {
-        myStory = myStory.filter(i => i.id !== id);
-        saveAndRender();
-    }
+    myData = myData.filter(i => i.id !== id);
+    localStorage.setItem('mySpaceData', JSON.stringify(myData));
+    renderPage();
 }
 
-saveAndRender();
-
+// Initial Render
+changePage('study', '📖 Study');
