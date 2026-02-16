@@ -1,61 +1,37 @@
 :root {
-    --bg: #121212;
-    --card: #1E1E1E;
-    --accent: #D4AF37; /* Gold for winners */
-    --text: #FFFFFF;
-    --success: #27AE60;
+    --bg: #0f0f0f;
+    --card: #1a1a1a;
+    --accent: #d4af37;
+    --success: #27ae60;
+    --text: #ffffff;
 }
 
-body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
-.app-wrapper { padding-bottom: 100px; }
+body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
+.app-wrapper { max-width: 500px; margin: 0 auto; padding-bottom: 100px; }
 
-/* Hero Gallery Section */
-.hero-section { 
-    height: 40vh; 
-    background: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80'); /* Placeholder until you upload yours */
-    background-size: cover;
-    background-position: center;
-    position: relative;
-}
-.overlay { 
-    position: absolute; bottom: 0; left: 0; right: 0; 
-    padding: 20px; background: linear-gradient(transparent, var(--bg)); 
-}
+.hero-section { height: 35vh; background: #333 url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1000') center/cover; position: relative; }
+.overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; background: linear-gradient(transparent, var(--bg)); }
 
-/* Stat Cards */
-.stat-card { background: var(--card); margin: 15px; padding: 20px; border-radius: 20px; }
-.progress-container { background: #333; height: 12px; border-radius: 6px; margin: 15px 0; overflow: hidden; }
-.progress-fill { background: var(--accent); width: 0%; height: 100%; transition: 0.5s ease; }
+.stat-card { background: var(--card); margin: 15px; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+.stat-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
 
-/* Ticks */
-.task-row { display: flex; flex-direction: column; gap: 10px; padding: 0 15px; }
-.task-row button { 
-    background: #2A2A2A; color: white; border: 1px solid #444; 
-    padding: 18px; border-radius: 12px; font-weight: 600; text-align: left;
-}
-.task-row button.completed { background: var(--success); border-color: var(--success); }
+.progress-container { background: #333; height: 10px; border-radius: 5px; overflow: hidden; }
+.progress-fill { background: var(--accent); width: 0%; height: 100%; transition: width 0.5s ease; }
 
-/* Quick Money */
-.quick-money { display: flex; gap: 10px; margin-top: 10px; }
-.quick-money button { flex: 1; background: #333; border: none; padding: 10px; border-radius: 8px; color: var(--accent); font-weight: bold; }
+.quick-money { display: flex; gap: 8px; margin-top: 15px; }
+.quick-money button { flex: 1; background: #222; border: 1px solid var(--accent); color: var(--accent); padding: 8px; border-radius: 5px; font-weight: bold; }
 
-/* Nav */
-.bottom-nav { position: fixed; bottom: 0; width: 100%; background: #1E1E1E; display: flex; justify-content: space-around; padding: 20px 0 30px; }
-.nav-item { background: none; border: none; font-size: 24px; filter: grayscale(1); }
-.nav-item.active { filter: grayscale(0); transform: scale(1.2); }
+.contract-section { padding: 0 15px; margin-top: 20px; }
+.task-row { display: flex; flex-direction: column; gap: 10px; }
+.task-btn { background: #222; color: white; border: 1px solid #444; padding: 15px; border-radius: 10px; text-align: left; font-size: 15px; cursor: pointer; }
+.task-btn.completed { background: var(--success); border-color: var(--success); }
 
-.history-section { padding: 20px; margin-bottom: 50px; }
-.timeline-container { display: flex; flex-direction: column; gap: 15px; }
+.seal-btn { width: 100%; margin-top: 20px; padding: 15px; border-radius: 10px; border: none; background: var(--accent); color: black; font-weight: bold; font-size: 16px; }
 
-.history-card { 
-    background: #1E1E1E; border: 1px solid #333; 
-    border-radius: 12px; padding: 15px; 
-    display: flex; align-items: center; justify-content: space-between;
-}
+.history-section { padding: 20px; }
+.history-card { background: #1a1a1a; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #444; }
+.history-card.perfect { border-left-color: var(--success); }
 
-.day-count { font-weight: bold; color: var(--accent); font-size: 12px; width: 50px; }
-.day-stats { display: flex; flex-direction: column; font-size: 13px; color: #AAA; flex-grow: 1; }
-.status-indicator { width: 10px; height: 10px; border-radius: 50%; }
-.status-indicator.perfect { background: var(--success); box-shadow: 0 0 10px var(--success); }
-.status-indicator.partial { background: #E67E22; }
-
+.bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #111; display: flex; justify-content: space-around; padding: 15px 0 30px; border-top: 1px solid #333; }
+.nav-item { background: none; border: none; font-size: 20px; opacity: 0.5; }
+.nav-item.active { opacity: 1; }
