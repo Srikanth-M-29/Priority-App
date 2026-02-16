@@ -3,36 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>My Mentor: FocusFlow</title>
+    <title>FocusFlow: My Space</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <div class="app-wrapper">
+    <div class="app-container">
         <header>
-            <h1>FocusFlow</h1>
-            <p id="mentor-greeting">What are we learning today?</p>
+            <h1 id="page-title">My Study</h1>
+            <p id="mentor-greeting">Keep going, Srikanth.</p>
         </header>
 
-        <section class="capture-box">
-            <select id="entryType">
-                <option value="study">📖 Study Session</option>
-                <option value="insight">💡 Insight/Idea</option>
-                <option value="lesson">🎓 Lesson Learned</option>
-                <option value="note">📝 Quick Note</option>
-            </select>
-            <textarea id="mainInput" placeholder="Write to your future self..."></textarea>
-            <button onclick="captureThought()">Save to History</button>
-        </section>
+        <main id="content-area">
+            <div id="entry-form">
+                <textarea id="mainInput" placeholder="Write something..."></textarea>
+                <button onclick="saveEntry()">Add to Page</button>
+            </div>
+            <div id="page-feed"></div>
+        </main>
 
-        <section id="timeline-feed"></section>
-        <section class="search-container">
-    <input type="text" id="searchInput" oninput="saveAndRender()" placeholder="🔍 Search your memories and lessons...">
-</section>
-
-<section id="timeline-feed"></section>
+        <nav class="bottom-nav">
+            <button onclick="changePage('study', '📖 Study')">📖</button>
+            <button onclick="changePage('ideas', '💡 Ideas')">💡</button>
+            <button onclick="changePage('goals', '🚀 Go-Ahead')">🚀</button>
+            <button onclick="changePage('wins', '🌟 Wins')">🌟</button>
+            <button onclick="changePage('growth', '🌱 Grow')">🌱</button>
+            <button onclick="changePage('alerts', '🔔 Alerts')">🔔</button>
+        </nav>
     </div>
     <script src="app.js"></script>
 </body>
 </html>
-
