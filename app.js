@@ -50,3 +50,28 @@ function deleteTask(id) {
 }
 
 renderTasks();
+function requestNotif() {
+    // Check if the browser even supports notifications
+    if (!("Notification" in window)) {
+        alert("This browser does not support notifications.");
+        return;
+    }
+
+    // Ask the iPhone for permission
+    Notification.requestPermission().then(permission => {
+        if (permission === "granted") {
+            alert("Success! Your iPhone will now allow alerts.");
+            // Hide the button since we don't need it anymore
+            document.getElementById('notif-btn').style.display = 'none';
+            
+            // Send a test notification immediately
+            new Notification("FocusFlow Active", {
+                body: "Priority engine is running!",
+                icon: "https://srikanth-m-29.github.io/Priority-App/icon.png"
+            });
+        } else {
+            alert("Permission denied. Check your iPhone Settings > Notifications.");
+        }
+    });
+}
+
