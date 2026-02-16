@@ -74,4 +74,27 @@ function requestNotif() {
         }
     });
 }
+// This function checks if any task has a dangerous "Urgency Score"
+function monitorUrgency() {
+    tasks.forEach(task => {
+        // If the score is high (e.g., > 20) and you haven't been alerted yet
+        if (task.score > 20 && !task.alerted) {
+            sendNotification(task.name);
+            task.alerted = true; // Prevents spamming you
+        }
+    });
+    saveAndRender();
+}
+
+function sendNotification(taskName) {
+    if (Notification.permission === "granted") {
+        new Notification("🚨 Focus Alert!", {
+            body: `Priority Spike: Start working on "${taskName}" now.`,
+            icon: "icon.png"
+        });
+    }
+}
+
+// Check every 60 seconds
+setInterval(monitorUrgency, 60000);
 
