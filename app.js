@@ -98,8 +98,58 @@ function sendNotification(taskName) {
         });
     }
 }
+// Initialize separate storage for your diary
+let diaryEntries = JSON.parse(localStorage.getItem('myDiary')) || [];
+
+function saveDailySession() {
+    const reflection = document.getElementById('dailyReflection').value;
+    const plan = document.getElementById('tomorrowPlan').value;
+
+    if (!reflection || !plan) return alert("Write at least one sentence for your future self!");
+
+    const session = {
+        id: Date.now(),
+        date: new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+        reflection: reflection,
+        plan: plan,
+        // personality tracking: log how you felt during the entry
+        energyLevel: prompt("Final Energy Level (1-10)?") 
+    };
+
+    // 'unshift' puts the newest day at the very top of your history
+    diaryEntries.unshift(session); 
+    localStorage.setItem('myDiary', JSON.stringify(diaryEntries));
+
+    // Clear the textareas for a fresh start tomorrow
+    document.getElementById('dailyReflection').value = '';
+    document.getElementById('tomorrowPlan').value = '';
+
+    alert("Day logged. Your history is updated.");
+    renderHistory();
+}
+
+function renderHistory() {
+    const container = document.getElementById('historyList');
+    container.innerHTML = diaryEntries.map(entry => `
+        <div class="history-item">
+            <div class="history-date">${entry.date} (Energy: ${entry.energyLevel})</div>
+            <div class="history-content">
+                <strong>Reflection:</strong> ${entry.reflection}<br>
+                <strong>Plan:</strong> ${entry.plan}
+            </div>
+        </div>
+    `).join('');
+}
+
+// Function to switch between Tasks and History views
+function showSection(section) {
+    document.getElementById('taskList').style.display = section === 'tasks' ? 'block' : 'none';
+    document.getElementById('historyList').style.display = section === 'history' ? 'block' : 'none';
+    if(section === 'history') renderHistory();
+}
 
 // Check every 60 seconds
 setInterval(monitorUrgency, 60000);
+
 
 
