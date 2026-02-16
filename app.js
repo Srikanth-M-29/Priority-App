@@ -1,50 +1,43 @@
+// NEW STATE STRUCTURE
 let state = JSON.parse(localStorage.getItem('principalData')) || {
     revenue: 0,
     goal: 500000,
-    tasks: { task1: false, task2: false, task3: false }
+    dailyTasks: { task1: false, task2: false, task3: false },
+    history: [] // This is where Day 1, Day 2, etc. live
 };
 
-function init() {
-    document.getElementById('greeting').innerText = "Principal Srikanth";
-    render();
-}
+// NEW FUNCTION: End the day and track progress
+function sealDay() {
+    const today = new Date().toLocaleDateString();
+    
+    // Create a snapshot of today
+    const daySnapshot = {
+        date: today,
+        revenueAtDate: state.revenue,
+        tasksDone: Object.values(state.dailyTasks).filter(v => v).length,
+        isSuccess: Object.values(state.dailyTasks).every(v => v)
+    };
 
-function addRevenue(amount) {
-    state.revenue += amount;
+    // Add to history if it's a new day
+    state.history.unshift(daySnapshot); 
+    
+    // Reset daily tasks for tomorrow
+    state.dailyTasks = { task1: false, task2: false, task3: false };
+    
     save();
 }
 
-function toggleTask(id) {
-    state.tasks[id] = !state.tasks[id];
-    save();
+function renderHistory() {
+    const container = document.getElementById('growth-timeline');
+    container.innerHTML = state.history.map((day, index) => `
+        <div class="history-card">
+            <div class="day-count">DAY ${state.history.length - index}</div>
+            <div class="day-stats">
+                <span>📅 ${day.date}</span>
+                <span>💰 Total: ₹${day.revenueAtDate.toLocaleString()}</span>
+                <span>✅ Tasks: ${day.tasksDone}/3</span>
+            </div>
+            <div class="status-indicator ${day.isSuccess ? 'perfect' : 'partial'}"></div>
+        </div>
+    `).join('');
 }
-
-function save() {
-    localStorage.setItem('principalData', JSON.stringify(state));
-    render();
-}
-
-function render() {
-    // Update Revenue Bar
-    const percent = Math.min((state.revenue / state.goal) * 100, 100);
-    document.getElementById('revenue-bar').style.width = percent + "%";
-    document.getElementById('revenue-percent').innerText = Math.round(percent) + "%";
-
-    // Update Tasks
-    for (let id in state.tasks) {
-        const btn = document.getElementById(id);
-        if (state.tasks[id]) {
-            btn.classList.add('completed');
-        } else {
-            btn.classList.remove('completed');
-        }
-    }
-
-    // AI Roast logic
-    const roast = document.getElementById('ai-roast');
-    if (percent < 10) roast.innerText = "Revenue is looking thin. Focus on the firm, Principal.";
-    else if (state.tasks.task2 === false) roast.innerText = "CAT doesn't study itself. Get back to the Library.";
-    else roast.innerText = "Solid progress. Stage prizes are getting closer.";
-}
-
-init();
