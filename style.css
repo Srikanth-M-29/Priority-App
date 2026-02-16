@@ -1,32 +1,27 @@
-.diary-card {
-    background: #ffffff;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
+:root {
+    --bg: #F8F9FA;
+    --text: #2D3436;
+    --accent: #6C5CE7;
+    --card: #FFFFFF;
 }
 
-textarea {
-    width: 100%;
-    min-height: 120px;
-    margin: 10px 0;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 16px; /* Prevents iPhone zoom on focus */
-    font-family: 'Georgia', serif; /* Feels more like a diary */
-}
+body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 20px; }
+.app-wrapper { max-width: 600px; margin: 0 auto; }
 
-.history-item {
-    background: #f9f9f9;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-left: 5px solid #007AFF;
-    border-radius: 4px;
-}
+header { text-align: center; margin-bottom: 40px; }
+h1 { font-weight: 300; letter-spacing: 2px; margin-bottom: 5px; }
+#mentor-greeting { color: #636E72; font-style: italic; }
 
-.history-date {
-    font-size: 0.8em;
-    color: #666;
-    margin-bottom: 5px;
-}
+.capture-box { background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 40px; }
+select, textarea { width: 100%; border: 1px solid #DFE6E9; border-radius: 10px; padding: 12px; margin-bottom: 10px; box-sizing: border-box; font-size: 16px; }
+textarea { height: 120px; font-family: inherit; }
+button { width: 100%; background: var(--accent); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+
+.feed-card { background: var(--card); padding: 20px; border-radius: 15px; margin-bottom: 20px; position: relative; border-left: 5px solid var(--accent); animation: slideIn 0.3s ease; }
+.type-tag { font-size: 10px; font-weight: bold; color: var(--accent); background: #EFEEFF; padding: 4px 8px; border-radius: 5px; }
+.time { font-size: 12px; color: #B2BEC3; float: right; }
+.content { margin-top: 15px; line-height: 1.6; }
+.mentor-note { margin-top: 15px; padding: 10px; background: #F9F9FB; border-radius: 8px; font-size: 14px; color: #636E72; }
+.del-btn { position: absolute; top: 10px; right: -30px; background: none; color: #D63031; width: auto; font-size: 20px; }
+
+@keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
