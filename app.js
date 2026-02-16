@@ -24,8 +24,16 @@ function captureThought() {
 function saveAndRender() {
     localStorage.setItem('myStoryData', JSON.stringify(myStory));
     const feed = document.getElementById('timeline-feed');
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     
-    feed.innerHTML = myStory.map(item => `
+    // FILTER LOGIC: Only show items that match the search
+    const filteredStory = myStory.filter(item => 
+        item.content.toLowerCase().includes(searchTerm) || 
+        item.type.toLowerCase().includes(searchTerm) ||
+        (item.reflection && item.reflection.toLowerCase().includes(searchTerm))
+    );
+
+    feed.innerHTML = filteredStory.map(item => `
         <div class="feed-card ${item.type}">
             <div class="card-header">
                 <span class="type-tag">${item.type.toUpperCase()}</span>
@@ -37,9 +45,13 @@ function saveAndRender() {
         </div>
     `).join('');
 
+    // If search returns nothing, show a helpful message
+    if (filteredStory.length === 0 && searchTerm !== "") {
+        feed.innerHTML = `<p style="text-align:center; color:#b2bec3;">No memories found matching "${searchTerm}"</p>`;
+    }
+
     updateGreeting();
 }
-
 function updateGreeting() {
     const greetings = ["Keep growing.", "Stay curious.", "Focus on the process.", "Learning is a superpower."];
     document.getElementById('mentor-greeting').innerText = greetings[Math.floor(Math.random() * greetings.length)];
@@ -53,3 +65,4 @@ function deleteEntry(id) {
 }
 
 saveAndRender();
+
