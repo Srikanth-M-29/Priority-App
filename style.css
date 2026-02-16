@@ -1,51 +1,32 @@
-:root {
-    --ios-blue: #007AFF;
-    --bg-color: #F2F2F7;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background-color: var(--bg-color);
-    margin: 0;
-    padding: 20px;
-}
-
-.app-container { max-width: 400px; margin: auto; }
-
-header h1 { font-weight: 700; margin-bottom: 5px; }
-
-.input-card {
-    background: white;
+.diary-card {
+    background: #ffffff;
     padding: 20px;
     border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     margin-bottom: 20px;
 }
 
-input, button {
+textarea {
     width: 100%;
+    min-height: 120px;
     margin: 10px 0;
     padding: 12px;
-    border-radius: 10px;
     border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px; /* Prevents iPhone zoom on focus */
+    font-family: 'Georgia', serif; /* Feels more like a diary */
 }
 
-button {
-    background-color: var(--ios-blue);
-    color: white;
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
-}
-
-.task-item {
-    background: white;
+.history-item {
+    background: #f9f9f9;
     padding: 15px;
-    border-radius: 12px;
     margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    border-left: 5px solid #007AFF;
+    border-radius: 4px;
 }
 
-.urgent { border-left: 5px solid #FF3B30; } /* iOS Red */
+.history-date {
+    font-size: 0.8em;
+    color: #666;
+    margin-bottom: 5px;
+}
