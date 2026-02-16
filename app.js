@@ -1,60 +1,50 @@
-let myData = JSON.parse(localStorage.getItem('mySpaceData')) || [];
-let currentPage = 'study';
+let state = JSON.parse(localStorage.getItem('principalData')) || {
+    revenue: 0,
+    goal: 500000,
+    tasks: { task1: false, task2: false, task3: false }
+};
 
-function changePage(pageId, title) {
-    currentPage = pageId;
-    document.getElementById('page-title').innerText = title;
-    
-    // Customize placeholder based on page
-    const input = document.getElementById('mainInput');
-    const placeholders = {
-        study: "What did you learn today?",
-        ideas: "Capture that spark...",
-        goals: "What is the next big step?",
-        wins: "Celebrate a small victory!",
-        growth: "What needs to be better tomorrow?",
-        alerts: "EMI or Deadline? (Format: Name - Date)"
-    };
-    input.placeholder = placeholders[pageId];
-    renderPage();
+function init() {
+    document.getElementById('greeting').innerText = "Principal Srikanth";
+    render();
 }
 
-function saveEntry() {
-    const text = document.getElementById('mainInput').value;
-    if(!text) return;
-
-    const entry = {
-        id: Date.now(),
-        category: currentPage,
-        content: text,
-        date: new Date().toLocaleDateString(),
-        timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-    };
-
-    myData.unshift(entry);
-    localStorage.setItem('mySpaceData', JSON.stringify(myData));
-    document.getElementById('mainInput').value = '';
-    renderPage();
+function addRevenue(amount) {
+    state.revenue += amount;
+    save();
 }
 
-function renderPage() {
-    const feed = document.getElementById('page-feed');
-    const filteredData = myData.filter(item => item.category === currentPage);
-    
-    feed.innerHTML = filteredData.map(item => `
-        <div class="card ${item.category}">
-            <small>${item.date} • ${item.timestamp}</small>
-            <p>${item.content}</p>
-            <button class="del-btn" onclick="deleteEntry(${item.id})">×</button>
-        </div>
-    `).join('');
+function toggleTask(id) {
+    state.tasks[id] = !state.tasks[id];
+    save();
 }
 
-function deleteEntry(id) {
-    myData = myData.filter(i => i.id !== id);
-    localStorage.setItem('mySpaceData', JSON.stringify(myData));
-    renderPage();
+function save() {
+    localStorage.setItem('principalData', JSON.stringify(state));
+    render();
 }
 
-// Initial Render
-changePage('study', '📖 Study');
+function render() {
+    // Update Revenue Bar
+    const percent = Math.min((state.revenue / state.goal) * 100, 100);
+    document.getElementById('revenue-bar').style.width = percent + "%";
+    document.getElementById('revenue-percent').innerText = Math.round(percent) + "%";
+
+    // Update Tasks
+    for (let id in state.tasks) {
+        const btn = document.getElementById(id);
+        if (state.tasks[id]) {
+            btn.classList.add('completed');
+        } else {
+            btn.classList.remove('completed');
+        }
+    }
+
+    // AI Roast logic
+    const roast = document.getElementById('ai-roast');
+    if (percent < 10) roast.innerText = "Revenue is looking thin. Focus on the firm, Principal.";
+    else if (state.tasks.task2 === false) roast.innerText = "CAT doesn't study itself. Get back to the Library.";
+    else roast.innerText = "Solid progress. Stage prizes are getting closer.";
+}
+
+init();
