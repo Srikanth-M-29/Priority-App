@@ -4,20 +4,24 @@ function addTask() {
     const name = document.getElementById('taskName').value;
     const imp = document.getElementById('importance').value;
     const dead = document.getElementById('deadline').value;
-    
-    // THE REFINEMENT: Data collection
-    const energy = prompt("On a scale of 1-10, how much energy do you have right now?");
 
-    if(!name || !dead || !energy) return alert("Please fill everything out!");
+    // The "Interrogation" Flow
+    const mood = confirm("Are you feeling focused? (OK for Yes, Cancel for No)");
+    const energy = prompt("Energy Level (1-10)?");
+    const complexity = prompt("How mentally heavy is this task (1-10)?");
+
+    if(!name || !dead) return alert("Missing task details!");
+
+    // Advanced Priority Formula
+    // Logic: If mood is low but task is complex, priority lowers (save for later)
+    let focusMultiplier = mood ? 1.2 : 0.8;
+    let score = ((imp * 10) / dead) * (energy / 5) * focusMultiplier;
 
     const newTask = {
         id: Date.now(),
         name: name,
-        importance: parseInt(imp),
-        deadline: parseFloat(dead),
-        userEnergy: parseInt(energy),
-        // The Logic: Higher importance + Shorter deadline + High Energy = Top Priority
-        score: ((parseInt(imp) * 10) / parseFloat(dead)) * (parseInt(energy) / 5)
+        score: score,
+        alerted: false
     };
 
     tasks.push(newTask);
@@ -97,4 +101,5 @@ function sendNotification(taskName) {
 
 // Check every 60 seconds
 setInterval(monitorUrgency, 60000);
+
 
