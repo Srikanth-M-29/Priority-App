@@ -32,10 +32,30 @@
         </section>
 
         <section id="taskList">
+            <section class="diary-card">
+    <h2>🌙 Nightly Alignment</h2>
+    <p>Unload your mind before sleep.</p>
+    
+    <label>Today's Reflection:</label>
+    <textarea id="dailyReflection" placeholder="What did I learn today? Where did I grow?"></textarea>
+    
+    <label>Tomorrow's Intentions:</label>
+    <textarea id="tomorrowPlan" placeholder="What are my top 3 non-negotiables for tomorrow?"></textarea>
+    
+    <button onclick="saveDailySession()" class="save-btn">Seal the Day & Clear Mind</button>
+</section>
+
+<div class="tabs">
+    <button onclick="showSection('tasks')">Tasks</button>
+    <button onclick="showSection('history')">History & Growth</button>
+</div>
+
+<div id="historyList" style="display:none;"></div>
             </section>
     </div>
     <script src="app.js"></script>
 </body>
 </html>
+
 
 
