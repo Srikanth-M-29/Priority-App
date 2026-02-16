@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Srikanth's Command Center</title>
+    <title>Principal Architect Command Center</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="app-wrapper">
         <div id="gallery-prime" class="hero-section">
             <div class="overlay">
-                <h1 id="greeting">Loading...</h1>
-                <p id="ai-roast">Ready to build your legacy?</p>
+                <h1 id="greeting">Principal Srikanth</h1>
+                <p id="ai-roast">Designing the future, one log at a time.</p>
             </div>
         </div>
 
         <section class="stat-card">
             <div class="stat-header">
                 <span>Monthly Revenue Goal</span>
-                <span id="revenue-percent">0%</span>
+                <b id="revenue-percent">0%</b>
             </div>
             <div class="progress-container">
                 <div id="revenue-bar" class="progress-fill"></div>
@@ -33,16 +33,18 @@
         <section class="contract-section">
             <h3>At Any Cost (Daily Contract)</h3>
             <div class="task-row">
-                <button id="task1" onclick="toggleTask('task1')">Business Profit Action</button>
-                <button id="task2" onclick="toggleTask('task2')">CAT/IELTS Study</button>
-                <button id="task3" onclick="toggleTask('task3')">Architecture Research</button>
+                <button id="task1" class="task-btn" onclick="toggleTask('task1')">Business Profit Action</button>
+                <button id="task2" class="task-btn" onclick="toggleTask('task2')">CAT/IELTS Study</button>
+                <button id="task3" class="task-btn" onclick="toggleTask('task3')">Architecture Research</button>
             </div>
+            <button class="seal-btn" onclick="sealDay()">Seal the Day</button>
         </section>
-<section class="history-section">
-    <h3>Legacy Timeline</h3>
-    <div id="growth-timeline" class="timeline-container">
-        </div>
-</section>
+
+        <section class="history-section">
+            <h3>Legacy Timeline</h3>
+            <div id="growth-timeline"></div>
+        </section>
+
         <nav class="bottom-nav">
             <button class="nav-item active">🏠</button>
             <button class="nav-item">💰</button>
@@ -53,4 +55,3 @@
     <script src="app.js"></script>
 </body>
 </html>
-
