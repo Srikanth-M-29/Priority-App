@@ -62,4 +62,53 @@ function toggleLike(id) {
     lucide.createIcons();
 }
 
+// Function to open the upload screen
+function openUpload() {
+    document.getElementById('upload-modal').style.display = 'block';
+}
+
+function closeUpload() {
+    document.getElementById('upload-modal').style.display = 'none';
+}
+
+// Handle image selection
+function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = function() {
+        const output = document.getElementById('img-preview');
+        output.src = reader.result;
+        output.style.display = 'block';
+        document.getElementById('upload-placeholder').style.display = 'none';
+    }
+    reader.readAsDataURL(event.target.files[0]);
+}
+
+// Submit the post to the feed
+function submitPost() {
+    const imgUrl = document.getElementById('img-preview').src;
+    const caption = document.getElementById('caption-input').value;
+
+    if (!imgUrl || imgUrl === window.location.href) {
+        alert("Please select a photo first!");
+        return;
+    }
+
+    // Add to our posts array
+    const newPost = {
+        user: 'principal_srikanth',
+        img: imgUrl,
+        cap: caption || "Captured at Site"
+    };
+
+    posts.unshift(newPost); // Add to beginning of feed
+    renderFeed(); // Refresh feed
+    closeUpload();
+    
+    // Play success sound
+    document.getElementById('cash-sound').play();
+}
+
+// Update the Nav icon in your HTML or app.js render function
+// Ensure the plus icon has: onclick="openUpload()"
+
 window.onload = init;
