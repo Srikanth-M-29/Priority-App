@@ -1,29 +1,30 @@
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-body { background: #000; color: #fff; font-family: -apple-system, system-ui, sans-serif; }
+body { background: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
 
 .app-wrapper { max-width: 500px; margin: 0 auto; padding-bottom: 60px; }
 
 /* Header */
 .insta-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; position: sticky; top: 0; background: #000; z-index: 100; }
-.logo-font { font-family: 'Arial', sans-serif; font-size: 24px; font-weight: 800; color: #fff; letter-spacing: -1px; }
+.brand-logo { font-size: 24px; font-weight: 800; letter-spacing: -1px; }
 .header-right { display: flex; gap: 20px; }
+[data-lucide] { width: 24px; height: 24px; stroke-width: 2px; }
 
 /* Stories */
-.story-container { display: flex; padding: 8px 10px; gap: 12px; overflow-x: auto; border-bottom: 0.1px solid #262626; scrollbar-width: none; }
+.story-container { display: flex; padding: 10px; gap: 12px; overflow-x: auto; border-bottom: 0.1px solid #262626; scrollbar-width: none; }
 .story-ring { min-width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7); padding: 2px; }
 .story-inner { background: #000; height: 100%; width: 100%; border-radius: 50%; border: 2px solid #000; display: flex; align-items: center; justify-content: center; font-size: 28px; }
 
-/* Feed */
-.post { border-bottom: 0.1px solid #000; margin-bottom: 10px; }
-.post-user-row { display: flex; align-items: center; padding: 10px; gap: 10px; }
-.user-avatar { width: 32px; height: 32px; border-radius: 50%; background: #333; }
+/* Feed Post */
+.post { border-bottom: 0.1px solid #262626; margin-bottom: 10px; }
+.post-header { display: flex; align-items: center; padding: 10px; gap: 10px; }
+.mini-avatar { width: 32px; height: 32px; border-radius: 50%; background: #333; }
 .username { font-size: 13px; font-weight: 600; }
 
-.img-box { position: relative; width: 100%; overflow: hidden; background: #121212; }
+.img-box { position: relative; width: 100%; background: #121212; }
 .post-img { width: 100%; display: block; }
 
-/* Heart Animation */
-.heart-pop { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 80px; color: #fff; pointer-events: none; z-index: 5; opacity: 0; }
+/* Heart Pop */
+.heart-pop { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 80px; pointer-events: none; z-index: 5; opacity: 0; }
 .pop-active { animation: instaHeart 0.8s ease-out; }
 @keyframes instaHeart {
     0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
@@ -33,9 +34,7 @@ body { background: #000; color: #fff; font-family: -apple-system, system-ui, san
 }
 
 .action-bar { display: flex; gap: 15px; padding: 12px 15px; }
-.action-bar i { cursor: pointer; transition: transform 0.1s; }
-.action-bar i:active { transform: scale(0.8); }
-.liked { color: #ed4956; fill: #ed4956; }
+.liked { color: #ed4956; fill: #ed4956; stroke: #ed4956; }
 
 .caption-area { padding: 0 15px 15px; font-size: 14px; line-height: 1.4; }
 .caption-area b { margin-right: 5px; }
