@@ -1,71 +1,38 @@
-const contentVault = [
-    { type: 'arch', img: 'https://images.unsplash.com/photo-1511818966892-d7d671e672a2', caption: '💡 Pritzker Insight: Minimalist glass structures increase property value by 20%.' },
-    { type: 'cat', img: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb', caption: '🧠 Logic Pulse: If 5 architects design 5 firms in 5 days, how long for 100 architects?' },
-    { type: 'news', img: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e', caption: '📊 Market News: Real estate prices in India expected to surge. #Business' }
-];
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background-color: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
-function init() {
-    console.log("App Initializing...");
-    renderStories();
-    renderFeed();
+.app-wrapper { max-width: 500px; margin: 0 auto; padding-bottom: 90px; }
+
+/* Header */
+.top-nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; position: sticky; top: 0; background: #000; z-index: 10; border-bottom: 0.5px solid #262626; }
+.logo { font-size: 24px; font-weight: bold; color: #D4AF37; letter-spacing: -1px; }
+
+/* Stories */
+.story-container { display: flex; padding: 10px; gap: 12px; overflow-x: auto; border-bottom: 0.5px solid #262626; }
+.story-circle { min-width: 66px; height: 66px; border-radius: 50%; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); padding: 2px; }
+.story-inner { background: #000; width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 2px solid #000; }
+
+/* Feed & Heart Animation */
+.post-card { margin-bottom: 15px; border-bottom: 0.5px solid #262626; }
+.post-user { padding: 10px 15px; font-weight: 600; font-size: 14px; }
+.img-container { position: relative; width: 100%; background: #121212; line-height: 0; cursor: pointer; }
+.post-img { width: 100%; height: auto; display: block; }
+
+.heart-pop {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+    font-size: 100px; color: white; pointer-events: none; opacity: 0; z-index: 5;
+}
+.animate-heart { animation: heartBurst 0.8s ease-out; }
+@keyframes heartBurst {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    30% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
 }
 
-function renderStories() {
-    const bar = document.getElementById('story-bar');
-    if (!bar) return; // Safety check
-    const icons = ['📐', '📚', '💰', '📉', '🏛️'];
-    bar.innerHTML = icons.map(icon => `
-        <div class="story-circle">
-            <div class="story-inner">${icon}</div>
-        </div>
-    `).join('');
-}
+.post-info { padding: 10px 15px; }
+.post-caption { font-size: 14px; line-height: 1.4; margin-top: 5px; }
 
-function renderFeed() {
-    const feed = document.getElementById('main-feed');
-    if (!feed) {
-        console.error("Could not find main-feed ID in HTML!");
-        return;
-    }
-
-    const posts = [...contentVault, ...contentVault]; // Double the content
-    
-    feed.innerHTML = posts.map(post => `
-        <article class="post-card">
-            <div class="post-header"><b>Principal Srikanth</b></div>
-            <div class="heart-container" ondblclick="triggerDopamine(this)">
-                <img class="post-img" src="${post.img}" alt="post">
-            </div>
-            <div class="post-actions">
-                <span class="like-btn" onclick="toggleLike(this)">🤍</span> <span>💬</span> <span>🔖</span>
-            </div>
-            <div class="post-caption"><b>GrowthGram</b> ${post.caption}</div>
-        </article>
-    `).join('');
-}
-
-function triggerDopamine(container) {
-    // Sound
-    const sound = document.getElementById('sound-money');
-    if (sound) { sound.currentTime = 0; sound.play(); }
-
-    // Heart Pop
-    const heart = document.createElement('div');
-    heart.innerHTML = '❤️';
-    heart.className = 'heart-pop';
-    container.appendChild(heart);
-    
-    // Toggle Like Icon
-    const likeBtn = container.closest('.post-card').querySelector('.like-btn');
-    if (likeBtn) likeBtn.innerText = '❤️';
-
-    setTimeout(() => heart.remove(), 800);
-}
-
-function toggleLike(btn) {
-    btn.innerText = (btn.innerText === '🤍') ? '❤️' : '🤍';
-}
-
-// THIS IS THE MOST IMPORTANT PART:
-// It waits for the whole page to load before running the JS.
-window.addEventListener('DOMContentLoaded', init);
+/* Bottom Nav */
+.bottom-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #000; display: flex; justify-content: space-around; padding: 15px 0 25px; border-top: 0.5px solid #262626; }
+.tab { font-size: 22px; opacity: 0.6; cursor: pointer; }
+.tab.active { opacity: 1; color: #D4AF37; }
