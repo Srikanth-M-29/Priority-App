@@ -1,4 +1,5 @@
-const posts = [
+// 1. DATA PERSISTENCE - Load from memory or use defaults
+let savedPosts = JSON.parse(localStorage.getItem('growthGramPosts')) || [
     { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c', cap: 'Architecture: Modernist glass facades increase property value by 20%.' },
     { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1507537297725-24a1c029d3ca', cap: 'Study Note: Logic is the foundation of design. #CAT2026' }
 ];
@@ -19,7 +20,7 @@ function renderStories() {
 
 function renderFeed() {
     const feed = document.getElementById('main-feed');
-    feed.innerHTML = [...posts, ...posts].map((p, i) => `
+    feed.innerHTML = savedPosts.map((p, i) => `
         <article class="post">
             <div class="post-header">
                 <div class="mini-avatar"></div>
@@ -42,73 +43,50 @@ function renderFeed() {
     lucide.createIcons();
 }
 
-function doLike(container, id) {
-    const heart = container.querySelector('.heart-pop');
-    const audio = document.getElementById('cash-sound');
-    
-    audio.currentTime = 0; audio.play();
-    heart.classList.add('pop-active');
-    setTimeout(() => heart.classList.remove('pop-active'), 800);
-    
-    // Auto-fill small heart
-    const heartIcon = document.getElementById(`like-${id}`);
-    heartIcon.classList.add('liked-red');
-    lucide.createIcons();
-}
+// UPLOAD LOGIC
+function openUpload() { document.getElementById('upload-modal').style.display = 'block'; }
+function closeUpload() { document.getElementById('upload-modal').style.display = 'none'; }
 
-function toggleLike(id) {
-    const icon = document.getElementById(`like-${id}`);
-    icon.classList.toggle('liked-red');
-    lucide.createIcons();
-}
-
-// Function to open the upload screen
-function openUpload() {
-    document.getElementById('upload-modal').style.display = 'block';
-}
-
-function closeUpload() {
-    document.getElementById('upload-modal').style.display = 'none';
-}
-
-// Handle image selection
 function previewImage(event) {
     const reader = new FileReader();
-    reader.onload = function() {
+    reader.onload = () => {
         const output = document.getElementById('img-preview');
         output.src = reader.result;
         output.style.display = 'block';
         document.getElementById('upload-placeholder').style.display = 'none';
-    }
+    };
     reader.readAsDataURL(event.target.files[0]);
 }
 
-// Submit the post to the feed
 function submitPost() {
     const imgUrl = document.getElementById('img-preview').src;
     const caption = document.getElementById('caption-input').value;
 
-    if (!imgUrl || imgUrl === window.location.href) {
-        alert("Please select a photo first!");
-        return;
-    }
+    if (!imgUrl || imgUrl.includes('window.location.href')) return alert("Select a photo!");
 
-    // Add to our posts array
-    const newPost = {
-        user: 'principal_srikanth',
-        img: imgUrl,
-        cap: caption || "Captured at Site"
-    };
+    const newPost = { user: 'principal_srikanth', img: imgUrl, cap: caption || "Captured at Site" };
 
-    posts.unshift(newPost); // Add to beginning of feed
-    renderFeed(); // Refresh feed
+    savedPosts.unshift(newPost);
+    localStorage.setItem('growthGramPosts', JSON.stringify(savedPosts)); // SAVE TO DISK
+
+    renderFeed();
     closeUpload();
-    
-    // Play success sound
     document.getElementById('cash-sound').play();
 }
 
-// Update the Nav icon in your HTML or app.js render function
-// Ensure the plus icon has: onclick="openUpload()"
+// INTERACTION LOGIC
+function doLike(container, id) {
+    const heart = container.querySelector('.heart-pop');
+    document.getElementById('cash-sound').play();
+    heart.classList.add('pop-active');
+    setTimeout(() => heart.classList.remove('pop-active'), 800);
+    document.getElementById(`like-${id}`).classList.add('liked-red');
+    lucide.createIcons();
+}
+
+function toggleLike(id) {
+    document.getElementById(`like-${id}`).classList.toggle('liked-red');
+    lucide.createIcons();
+}
 
 window.onload = init;
