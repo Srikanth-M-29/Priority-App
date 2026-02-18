@@ -20,3 +20,24 @@ body { font-family: -apple-system, sans-serif; background: var(--bg); color: var
 .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #111; display: flex; justify-content: space-around; padding: 15px 0 30px; border-top: 1px solid #333; }
 .nav-item { background: none; border: none; font-size: 20px; opacity: 0.5; }
 .nav-item.active { opacity: 1; }
+.view { animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.library-header { padding: 20px; text-align: center; color: var(--accent); }
+select, textarea { 
+    width: 100%; background: #222; border: 1px solid #444; color: white; 
+    padding: 12px; border-radius: 8px; margin-bottom: 10px; font-family: inherit;
+}
+textarea { height: 80px; resize: none; }
+.slider-box { margin: 15px 0; font-size: 14px; }
+input[type=range] { width: 100%; accent-color: var(--accent); }
+
+.study-card { 
+    background: var(--card); margin: 10px 15px; padding: 15px; 
+    border-radius: 12px; border-left: 4px solid var(--accent);
+}
+.study-card i { color: #888; font-size: 12px; display: block; margin-bottom: 5px; }
+.ai-response { 
+    margin-top: 10px; padding: 10px; background: #252525; 
+    border-radius: 5px; font-size: 13px; color: #d4af37; font-style: italic;
+}
