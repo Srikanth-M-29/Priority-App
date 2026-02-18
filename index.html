@@ -33,5 +33,25 @@
     <audio id="cash-sound" src="https://assets.mixkit.co/active_storage/sfx/2004/2004-preview.mp3"></audio>
 
     <script src="app.js"></script>
+    <div id="upload-modal" class="modal-overlay">
+    <div class="modal-content">
+        <header class="modal-header">
+            <button onclick="closeUpload()">Cancel</button>
+            <h3>New Post</h3>
+            <button class="share-btn" onclick="submitPost()">Share</button>
+        </header>
+        <div class="modal-body">
+            <div class="preview-box" onclick="document.getElementById('file-input').click()">
+                <img id="img-preview" src="" style="display:none;">
+                <div id="upload-placeholder">
+                    <i data-lucide="image"></i>
+                    <p>Tap to select site photo</p>
+                </div>
+            </div>
+            <textarea id="caption-input" placeholder="Write a caption or note..."></textarea>
+            <input type="file" id="file-input" accept="image/*" style="display:none" onchange="previewImage(event)">
+        </div>
+    </div>
+</div>
 </body>
 </html>
