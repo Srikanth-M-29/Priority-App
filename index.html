@@ -84,6 +84,20 @@
         </div>
     </div>
 
+    <div id="note-modal" class="modal-overlay">
+    <div class="modal-content">
+        <header class="modal-header">
+            <button onclick="closeNote()">Cancel</button>
+            <h3>Study Note</h3>
+            <button class="share-btn" onclick="saveNote()">Save</button>
+        </header>
+        <div class="modal-body" style="padding: 20px;">
+            <h4 id="note-context" style="color: #D4AF37; margin-bottom: 10px;">Context</h4>
+            <textarea id="note-text" placeholder="What did you learn from this article? AI Mentor will analyze this..." 
+                      style="width: 100%; height: 200px; background: #121212; color: #fff; border: 1px solid #333; padding: 15px; border-radius: 10px;"></textarea>
+        </div>
+    </div>
+</div>
     <audio id="cash-sound" src="https://assets.mixkit.co/active_storage/sfx/2004/2004-preview.mp3"></audio>
     <script src="app.js"></script>
 </body>
