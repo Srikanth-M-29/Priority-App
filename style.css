@@ -27,7 +27,62 @@ body { background: #000; color: #fff; overflow-x: hidden; }
 }
 
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: none; }
-.story-overlay { position: fixed; top:0; left:0; width:100vw; height:100vh; background:#000; z-index:3000; display:none; flex-direction:column; }
+/* Full Screen Story Overlay */
+.story-overlay { 
+    position: fixed; 
+    top: 0; left: 0; 
+    width: 100vw; height: 100vh; 
+    background: #000; 
+    z-index: 5000; 
+    display: none; 
+    flex-direction: column; 
+}
+
+.story-full-bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+}
+
+/* The Gradient Fade (Crucial for the "Insta" look) */
+.story-full-bg::after {
+    content: '';
+    position: absolute;
+    bottom: 0; width: 100%; height: 50%;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+}
+
+.story-progress-container { 
+    position: absolute; top: 15px; width: 94%; left: 3%; 
+    height: 2px; background: rgba(255,255,255,0.3); z-index: 10; border-radius: 2px;
+}
+.story-progress-fill { height: 100%; width: 0%; background: #fff; border-radius: 2px; }
+
+.story-header-overlay {
+    position: absolute; top: 30px; width: 100%; 
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 20px; z-index: 10;
+}
+.story-user-info { display: flex; align-items: center; gap: 10px; }
+.story-avatar { width: 32px; height: 32px; background: #D4AF37; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+
+.story-footer-content {
+    position: absolute; bottom: 40px; width: 100%;
+    padding: 0 25px; z-index: 10;
+}
+#story-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #fff; }
+#story-detail { font-size: 15px; line-height: 1.4; color: #ddd; margin-bottom: 20px; }
+
+.story-cta-row { display: flex; gap: 12px; }
+.insta-link-pill, .insta-note-pill {
+    flex: 1; padding: 12px; border-radius: 8px; text-align: center;
+    font-weight: 700; text-decoration: none; font-size: 14px; border: none;
+}
+.insta-link-pill { background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); color: #fff; }
+.insta-note-pill { background: #fff; color: #000; cursor: pointer; }
 .story-content { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
 #story-text-container { background: #1a1a1a; padding: 30px 20px; border-radius: 20px; text-align: center; width: 100%; max-width: 380px; border: 1px solid #333; }
 
