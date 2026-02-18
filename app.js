@@ -109,5 +109,43 @@ function toggleLike(id) {
     document.getElementById(`like-${id}`).classList.toggle('liked-red');
     lucide.createIcons();
 }
+// Open/Close Messaging
+function openMessaging() { document.getElementById('messaging-screen').style.display = 'block'; }
+function closeMessaging() { document.getElementById('messaging-screen').style.display = 'none'; }
 
+let activeMentor = "";
+
+function openChat(mentorName) {
+    activeMentor = mentorName;
+    document.getElementById('active-chat-name').innerText = mentorName;
+    document.getElementById('chat-window').style.display = 'block';
+    
+    // Initial Greeting
+    const chatBox = document.getElementById('chat-box');
+    chatBox.innerHTML = `<div class="msg ai">Hello Srikanth! I am your ${mentorName} assistant. How can I help you progress today?</div>`;
+}
+
+function closeChat() { document.getElementById('chat-window').style.display = 'none'; }
+
+function sendMessage() {
+    const input = document.getElementById('user-msg');
+    const chatBox = document.getElementById('chat-box');
+    if (!input.value) return;
+
+    // Add user message
+    chatBox.innerHTML += `<div class="msg user">${input.value}</div>`;
+    
+    // Simulated AI Logic
+    let response = "That's a great question. Let me analyze that for your architecture portfolio.";
+    if (activeMentor === 'CAT-alyst') response = "Focus on the logic here: If P implies Q, then not-Q implies not-P. Want a practice sum?";
+    
+    setTimeout(() => {
+        chatBox.innerHTML += `<div class="msg ai">${response}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }, 1000);
+
+    input.value = "";
+}
+
+// Update the header icon in index.html to: <i data-lucide="message-circle" onclick="openMessaging()"></i>
 window.onload = init;
