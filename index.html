@@ -20,7 +20,7 @@
         <main id="main-feed"></main>
 
         <nav class="insta-nav">
-            <i data-lucide="home"></i>
+            <i data-lucide="home" onclick="window.scrollTo(0,0)"></i>
             <i data-lucide="plus-square" onclick="openUpload()"></i> 
             <i data-lucide="circle-user"></i>
         </nav>
@@ -73,8 +73,8 @@
         <div class="modal-content">
             <header class="modal-header"><button onclick="closeMessaging()">Back</button><h3>AI Mentors</h3><div></div></header>
             <div class="inbox-list">
-                <div class="chat-item" onclick="openChat('Archi-Intel')">🏛️ Archi-Intel (Principal Mentor)</div>
-                <div class="chat-item" onclick="openChat('CAT-alyst')">📐 CAT-alyst (Logic Coach)</div>
+                <div class="chat-item" onclick="openChat('Archi-Intel')">🏛️ Archi-Intel</div>
+                <div class="chat-item" onclick="openChat('CAT-alyst')">📐 CAT-alyst</div>
             </div>
         </div>
     </div>
@@ -83,7 +83,7 @@
         <div class="modal-content">
             <header class="modal-header"><button onclick="closeChat()">Back</button><h3 id="active-chat-name"></h3><div></div></header>
             <div id="chat-box" class="chat-body"></div>
-            <div class="chat-input-area"><input type="text" id="user-msg" placeholder="Ask to 'revise my notes'..."><button onclick="sendMessage()">Send</button></div>
+            <div class="chat-input-area"><input type="text" id="user-msg" placeholder="Ask to 'revise notes'..."><button onclick="sendMessage()">Send</button></div>
         </div>
     </div>
 
