@@ -14,11 +14,31 @@ const storyData = {
     '📐': { title: 'Architecture News', detail: 'Fetching latest from ArchDaily...', img: '', link: '#' }
 };
 
-async function init() {
-    await fetchLiveNews();
-    renderStories();
-    renderFeed();
-    lucide.createIcons();
+const FINANCE_FEED = 'https://api.rss2json.com/v1/api.json?rss_url=https://www.reutersagency.com/feed/?best-topics=business&format=xml';
+
+async function fetchLiveNews() {
+    try {
+        // Fetch Architecture
+        const resArchi = await fetch(ARCHI_FEED_URL);
+        const dataArchi = await resArchi.json();
+        if (dataArchi.status === 'ok') liveArchiNews = dataArchi.items;
+
+        // Fetch Business/Finance
+        const resFin = await fetch(FINANCE_FEED);
+        const dataFin = await resFin.json();
+        if (dataFin.status === 'ok') {
+            // Mix these into the feed as well
+            dataFin.items.slice(0, 3).forEach(item => {
+                liveArchiNews.push({
+                    user: 'business_intel',
+                    title: item.title,
+                    link: item.link,
+                    thumbnail: 'https://images.unsplash.com/photo-1611974714024-462be009186d' // Stock finance image
+                });
+            });
+        }
+        renderFeed(); // Refresh the feed once data is in
+    } catch (e) { console.log("News sync failed."); }
 }
 
 async function fetchLiveNews() {
@@ -42,21 +62,44 @@ function renderStories() {
     `).join('');
 }
 
+// Function to combine your posts with global news
 function renderFeed() {
     const feed = document.getElementById('main-feed');
-    feed.innerHTML = savedPosts.map((p, i) => `
+    
+    // 1. Map your personal posts
+    let combinedFeed = savedPosts.map((p, i) => ({...p, type: 'personal', id: i}));
+
+    // 2. Inject News items as "Posts"
+    liveArchiNews.slice(0, 5).forEach((news) => {
+        combinedFeed.push({
+            user: 'archdaily_global',
+            img: news.thumbnail || news.enclosure.link || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab',
+            cap: `[GLOBAL NEWS] ${news.title}`,
+            time: 'Live Update',
+            link: news.link,
+            type: 'news'
+        });
+    });
+
+    // 3. Sort or Shuffle (Optional: here we just show yours first, then news)
+    feed.innerHTML = combinedFeed.map((p, i) => `
         <article class="post">
-            <div class="post-header"><span class="username">${p.user}</span></div>
-            <div class="img-box" ondblclick="doLike(this, ${i})">
+            <div class="post-header">
+                <span class="username">${p.user}</span>
+                ${p.type === 'news' ? '<span style="color:#0095f6; font-size:10px; margin-left:5px;">Follow</span>' : ''}
+            </div>
+            <div class="img-box" ${p.type === 'news' ? `onclick="window.open('${p.link}', '_blank')"` : `ondblclick="doLike(this, ${i})"`}>
                 <img src="${p.img}" class="post-img">
-                <div class="heart-pop">❤️</div>
+                ${p.type === 'personal' ? '<div class="heart-pop">❤️</div>' : ''}
             </div>
             <div class="action-bar">
-                <i data-lucide="heart" id="like-${i}" onclick="toggleLike(${i})"></i>
-                <i data-lucide="message-circle"></i><i data-lucide="send"></i>
+                <i data-lucide="heart" class="${p.type === 'news' ? 'news-heart' : ''}" id="like-${i}" onclick="toggleLike(${i})"></i>
+                <i data-lucide="message-circle" onclick="${p.type === 'news' ? `openChat('Archi-Intel')` : ''}"></i>
+                <i data-lucide="send"></i>
             </div>
-            <div class="caption-area"><b>${p.user}</b> ${p.cap}
-                <div style="font-size: 10px; color: #8e8e8e; margin-top: 5px;">${p.time || 'Earlier'}</div>
+            <div class="caption-area">
+                <b>${p.user}</b> ${p.cap}
+                <div style="font-size: 10px; color: #8e8e8e; margin-top: 5px;">${p.time}</div>
             </div>
         </article>
     `).join('');
