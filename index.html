@@ -2,41 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>GrowthGram | Principal Srikanth</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-   <div class="app-container">
-    <header class="top-header">
-        <h1 class="logo">GrowthGram</h1>
-    </header>
-
-    <div id="story-bar" class="story-container"></div>
-    <main id="main-feed" class="feed-container"></main>
-
-    <nav class="bottom-nav">
-        </nav>
-</div>
+    <div class="app-wrapper">
+        <header class="top-nav">
+            <h1 class="logo">GrowthGram</h1>
+            <div class="nav-icons">💬 <span class="badge"></span></div>
         </header>
 
-        <div id="story-bar" class="story-container">
-            </div>
+        <div id="story-bar" class="story-container"></div>
 
-        <main id="main-feed" class="feed-container">
-            </main>
+        <main id="main-feed" class="feed-container"></main>
 
-        <nav class="bottom-nav">
-            <button class="nav-btn active">🏠</button>
-            <button class="nav-btn">🔍</button>
-            <button class="nav-btn" onclick="addPost()">➕</button>
-            <button class="nav-btn">📉</button>
-            <button class="nav-btn">👤</button>
+        <nav class="bottom-bar">
+            <div class="tab active">🏠</div>
+            <div class="tab">🔍</div>
+            <div class="tab plus">➕</div>
+            <div class="tab">📈</div>
+            <div class="tab">👤</div>
         </nav>
     </div>
 
-    <audio id="sound-money" src="https://assets.mixkit.co/active_storage/sfx/2004/2004-preview.mp3"></audio>
-    <audio id="sound-pop" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+    <audio id="cash-sound" src="https://assets.mixkit.co/active_storage/sfx/2004/2004-preview.mp3"></audio>
 
     <script src="app.js"></script>
 </body>
