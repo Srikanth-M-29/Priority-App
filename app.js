@@ -1,6 +1,6 @@
 let savedPosts = JSON.parse(localStorage.getItem('growthGramPosts')) || [
-    { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c', cap: 'Architecture: Modern glass facades can reduce lighting costs by 30%.' },
-    { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1509228468518-180dd48219d8', cap: 'CAT Prep: Logical reasoning is just architecture for the mind.' }
+    { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c', cap: 'Architecture: Modern glass facades can reduce lighting costs by 30%.', time: '18 Feb 2026, 10:00' },
+    { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1509228468518-180dd48219d8', cap: 'CAT Prep: Logical reasoning is just architecture for the mind.', time: '18 Feb 2026, 09:00' }
 ];
 
 const storyData = {
@@ -42,10 +42,10 @@ function renderFeed() {
                 <i data-lucide="message-circle"></i>
                 <i data-lucide="send"></i>
             </div>
-<div class="caption-area">
-    <b>${p.user}</b> ${p.cap}
-    <div style="font-size: 10px; color: #8e8e8e; margin-top: 5px;">${p.time || 'Earlier Today'}</div>
-</div>
+            <div class="caption-area">
+                <b>${p.user}</b> ${p.cap}
+                <div style="font-size: 10px; color: #8e8e8e; margin-top: 5px;">${p.time || 'Earlier Today'}</div>
+            </div>
         </article>
     `).join('');
     lucide.createIcons();
@@ -93,7 +93,6 @@ function submitPost() {
     const caption = document.getElementById('caption-input').value;
     if (!imgUrl || imgUrl.includes('window.location.href')) return alert("Select a photo!");
 
-    // Capture the current date and time
     const now = new Date();
     const timeString = now.toLocaleDateString('en-GB', { 
         day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' 
@@ -103,7 +102,7 @@ function submitPost() {
         user: 'principal_srikanth', 
         img: imgUrl, 
         cap: caption || "Captured at Site",
-        time: timeString // Store the timestamp
+        time: timeString
     };
 
     savedPosts.unshift(newPost);
@@ -126,7 +125,7 @@ function toggleLike(id) {
     document.getElementById(`like-${id}`).classList.toggle('liked-red');
     lucide.createIcons();
 }
-// Open/Close Messaging
+
 function openMessaging() { document.getElementById('messaging-screen').style.display = 'block'; }
 function closeMessaging() { document.getElementById('messaging-screen').style.display = 'none'; }
 
@@ -140,37 +139,42 @@ async function openChat(mentorName) {
 
     if (mentorName === 'Archi-Intel') {
         chatBox.innerHTML = `<div class="msg ai">Fetching latest Architecture updates for you, Srikanth...</div>`;
-        
-        // Simulating an API call to a news service
         setTimeout(() => {
             chatBox.innerHTML = `
                 <div class="msg ai">
                     <b>Today's Design Headlines:</b><br><br>
-                    1. 🏗️ <b>Pritzker Prize Trends:</b> Sustainability is no longer optional; it's the core.<br>
-                    2. 🏙️ <b>Smart Cities:</b> New glass tech reduces solar heat gain by 40%.<br>
-                    3. 📐 <b>Career:</b> Top firms are looking for Revit + AI workflow expertise.
+                    1. 🏗️ <b>Sustainability:</b> Circular economy in construction is the 2026 prize trend.<br>
+                    2. 🏙️ <b>Smart Glass:</b> New coatings block 90% of UV while staying clear.<br>
+                    3. 📐 <b>Revit:</b> Update 2026 includes AI-assisted layout generators.
                 </div>`;
         }, 1500);
     } else {
-        chatBox.innerHTML = `<div class="msg ai">Hello! I'm your ${mentorName} mentor. Ready to crush your CAT goals?</div>`;
+        chatBox.innerHTML = `<div class="msg ai">Hello! I'm your ${mentorName} mentor. Ready to crush your goals?</div>`;
     }
-}
 }
 
 function closeChat() { document.getElementById('chat-window').style.display = 'none'; }
 
 function sendMessage() {
-   // Inside sendMessage(), find the 'CAT-alyst' response line and update it:
-if (activeMentor === 'CAT-alyst') {
-    const logicQuestions = [
-        "If all Architects are Artists, and some Artists are Engineers, are all Architects Engineers? (Answer: No)",
-        "Clock Math: What is the angle between the hands at 3:30? (Answer: 75°)",
-        "Logic: A is taller than B, B is taller than C. Is C taller than A? (Answer: No)"
-    ];
-    const randomQ = logicQuestions[Math.floor(Math.random() * logicQuestions.length)];
-    response = `Here is a quick logic check: ${randomQ}`;
+    const input = document.getElementById('user-msg');
+    const chatBox = document.getElementById('chat-box');
+    if (!input.value.trim()) return;
 
-}
+    chatBox.innerHTML += `<div class="msg user">${input.value}</div>`;
+    const userText = input.value;
+    input.value = ""; 
 
-// Update the header icon in index.html to: <i data-lucide="message-circle" onclick="openMessaging()"></i>
-window.onload = init;
+    let response = "That is a strong insight. How can we apply this to your portfolio?";
+    
+    if (activeMentor === 'CAT-alyst') {
+        const logicQuestions = [
+            "Clock Math: What is the angle between the hands at 3:30? (Answer: 75°)",
+            "Logic: A is taller than B, B is taller than C. Is C taller than A? (Answer: No)",
+            "Syllogism: If all buildings need a base, and this structure is a building, does it need a base? (Answer: Yes)"
+        ];
+        const randomQ = logicQuestions[Math.floor(Math.random() * logicQuestions.length)];
+        response = `<b>Logic Challenge:</b> ${randomQ}`;
+    }
+
+    setTimeout(() => {
+        chat
