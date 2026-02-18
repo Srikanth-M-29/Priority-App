@@ -1,3 +1,42 @@
+// URLs for your news sources
+const ARCHI_FEED_URL = 'https://api.rss2json.com/v1/api.json?rss_url=https://www.archdaily.com/feed';
+const CAT_FEED_URL = 'https://api.rss2json.com/v1/api.json?rss_url=https://gradeup.co/articles/mba/cat-exam/rss'; // Example prep feed
+
+let liveArchiNews = [];
+
+// Fetch Architecture News on Load
+async function fetchLiveNews() {
+    try {
+        const response = await fetch(ARCHI_FEED_URL);
+        const data = await response.json();
+        if (data.status === 'ok') {
+            liveArchiNews = data.items;
+            updateArchiStory(); // Automatically update the Story with today's top news
+        }
+    } catch (error) {
+        console.log("News fetch failed, using fallback data.");
+    }
+}
+
+function updateArchiStory() {
+    if (liveArchiNews.length > 0) {
+        // Update the 🏛️ Story with the latest ArchDaily headline
+        storyData['🏛️'] = {
+            title: 'Archi-Daily News',
+            detail: liveArchiNews[0].title,
+            img: liveArchiNews[0].enclosure.link || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab',
+            link: liveArchiNews[0].link
+        };
+    }
+}
+
+// Call this in your init() function
+function init() {
+    fetchLiveNews(); 
+    renderStories();
+    renderFeed();
+    lucide.createIcons();
+}
 let savedPosts = JSON.parse(localStorage.getItem('growthGramPosts')) || [
     { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c', cap: 'Architecture: Modern glass facades can reduce lighting costs by 30%.', time: '18 Feb 2026, 10:00' },
     { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1509228468518-180dd48219d8', cap: 'CAT Prep: Logical reasoning is just architecture for the mind.', time: '18 Feb 2026, 09:00' }
