@@ -1,13 +1,15 @@
 let savedPosts = JSON.parse(localStorage.getItem('gGram_posts')) || [];
 let studyNotes = JSON.parse(localStorage.getItem('gGram_notes')) || [];
 let liveNews = [];
+let sTimer;
+let activeMentor = "";
 
 const API_ARCHI = 'https://api.rss2json.com/v1/api.json?rss_url=https://www.archdaily.com/feed';
 const API_BIZ = 'https://api.rss2json.com/v1/api.json?rss_url=https://www.reutersagency.com/feed/?best-topics=business&format=xml';
 
 const stories = {
-    '📐': { title: 'Design Logic', detail: 'Form follows function. Analyze spatial flow today.', img: 'https://images.unsplash.com/photo-1487958449943-2429e8be8625', link: '#' },
-    '📊': { title: 'Market Pulse', detail: 'Financial news builds CAT logic. Read carefully.', img: 'https://images.unsplash.com/photo-1611974714024-462be009186d', link: '#' }
+    '📐': { title: 'Design Logic', detail: 'Form follows function. Analyze spatial flow in architecture today.', img: 'https://images.unsplash.com/photo-1487958449943-2429e8be8625', link: 'https://www.archdaily.com' },
+    '📊': { title: 'Market Pulse', detail: 'Financial news builds CAT logic. Read the Reuters updates below.', img: 'https://images.unsplash.com/photo-1611974714024-462be009186d', link: 'https://www.reuters.com' }
 };
 
 async function init() {
@@ -25,7 +27,7 @@ async function fetchGlobalNews() {
         if(d1.items) liveNews.push(...d1.items.slice(0,3).map(i => ({...i, source: 'ArchDaily'})));
         if(d2.items) liveNews.push(...d2.items.slice(0,2).map(i => ({...i, source: 'Reuters Business'})));
         renderFeed();
-    } catch(e) { console.log("News Offline"); }
+    } catch(e) { console.log("Offline Mode"); }
 }
 
 function renderStories() {
@@ -90,28 +92,22 @@ function toggleLike(id) {
     lucide.createIcons();
 }
 
-let sTimer;
 function openStory(icon) {
     const data = stories[icon];
     const viewer = document.getElementById('story-viewer');
-    
     document.getElementById('story-category-name').innerText = data.title;
     document.getElementById('story-title').innerText = data.title;
     document.getElementById('story-detail').innerText = data.detail;
-    
-    // Set Full Screen Background
-    const bg = document.getElementById('story-bg-image');
-    bg.style.backgroundImage = `url('${data.img}')`;
-    
+    document.getElementById('story-bg-image').style.backgroundImage = `url('${data.img}')`;
     document.getElementById('story-link').href = data.link;
-    viewer.style.display = 'block';
-
+    viewer.style.display = 'flex';
     let w = 0; clearInterval(sTimer);
     sTimer = setInterval(() => {
         if(w >= 100) closeStory();
         else { w++; document.getElementById('story-progress-bar').style.width = w + '%'; }
-    }, 45); // Slightly faster for excitement
+    }, 50);
 }
+
 function closeStory() { document.getElementById('story-viewer').style.display = 'none'; clearInterval(sTimer); }
 
 function openNote() { 
@@ -149,10 +145,8 @@ function sendMessage() {
     if(userText.includes('revise')) {
         if(studyNotes.length > 0) {
             const last = studyNotes[studyNotes.length - 1];
-            reply = `Your last note was about <b>${last.context}</b>. You said: "${last.text}". How does this apply to your current site layout?`;
-        } else {
-            reply = "You haven't saved any notes yet! Click '+ Take Note' in a story first.";
-        }
+            reply = `Your last note: "${last.text}". How does this apply to your project?`;
+        } else { reply = "Take a note in a story first!"; }
     }
     setTimeout(() => { box.innerHTML += `<div class="msg ai">${reply}</div>`; box.scrollTop = box.scrollHeight; }, 600);
     inp.value = "";
