@@ -1,7 +1,16 @@
 let savedPosts = JSON.parse(localStorage.getItem('growthGramPosts')) || [
-    { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c', cap: 'Architecture: Modernist glass facades increase value by 20%.' },
-    { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1509228468518-180dd48219d8', cap: 'Study Note: Logic is the foundation of design.' }
+    { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c', cap: 'Architecture: Modern glass facades can reduce lighting costs by 30%.' },
+    { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1509228468518-180dd48219d8', cap: 'CAT Prep: Logical reasoning is just architecture for the mind.' }
 ];
+
+const storyData = {
+    '💰': { title: 'Revenue Goal', detail: 'Target: $50k Milestone for Q1. Current: Design Phase approval pending.' },
+    '📐': { title: 'Design Flow', detail: 'Form follows function. Focus on the spatial logic of the lobby today.' },
+    '📚': { title: 'CAT Formula', detail: 'Logarithms: log(ab) = log a + log b. Simplify to solve faster.' },
+    '🏛️': { title: 'IELTS Word', detail: '"Pragmatic": Dealing with things sensibly and realistically based on practical conditions.' },
+    '📈': { title: 'Growth Insight', detail: 'Architecture prizes are won by those who solve social problems, not just aesthetic ones.' },
+    '🏗️': { title: 'Site Priority', detail: 'Concrete curing check at Sector 7. Ensure temperature control is active.' }
+};
 
 function init() {
     renderStories();
@@ -11,16 +20,16 @@ function init() {
 
 function renderStories() {
     const bar = document.getElementById('story-bar');
-    if(!bar) return;
     const items = ['💰', '📐', '📚', '🏛️', '📈', '🏗️'];
     bar.innerHTML = items.map(icon => `
-        <div class="story-ring"><div class="story-inner">${icon}</div></div>
+        <div class="story-ring" onclick="openStory('${icon}')">
+            <div class="story-inner">${icon}</div>
+        </div>
     `).join('');
 }
 
 function renderFeed() {
     const feed = document.getElementById('main-feed');
-    if(!feed) return;
     feed.innerHTML = savedPosts.map((p, i) => `
         <article class="post">
             <div class="post-header"><span class="username">${p.user}</span></div>
@@ -37,6 +46,29 @@ function renderFeed() {
         </article>
     `).join('');
     lucide.createIcons();
+}
+
+let storyTimer;
+function openStory(icon) {
+    const data = storyData[icon];
+    const viewer = document.getElementById('story-viewer');
+    const bar = document.getElementById('story-progress-bar');
+    document.getElementById('story-category-name').innerText = icon + " Insights";
+    document.getElementById('story-title').innerText = data.title;
+    document.getElementById('story-detail').innerText = data.detail;
+    viewer.style.display = 'flex';
+    bar.style.width = '0%';
+    let width = 0;
+    clearInterval(storyTimer);
+    storyTimer = setInterval(() => {
+        if (width >= 100) { closeStory(); } 
+        else { width++; bar.style.width = width + '%'; }
+    }, 50); 
+}
+
+function closeStory() {
+    document.getElementById('story-viewer').style.display = 'none';
+    clearInterval(storyTimer);
 }
 
 function openUpload() { document.getElementById('upload-modal').style.display = 'block'; }
@@ -57,7 +89,6 @@ function submitPost() {
     const imgUrl = document.getElementById('img-preview').src;
     const caption = document.getElementById('caption-input').value;
     if (!imgUrl || imgUrl.includes('window.location.href')) return alert("Select a photo!");
-
     savedPosts.unshift({ user: 'principal_srikanth', img: imgUrl, cap: caption || "Captured at Site" });
     localStorage.setItem('growthGramPosts', JSON.stringify(savedPosts));
     renderFeed();
