@@ -160,23 +160,16 @@ async function openChat(mentorName) {
 function closeChat() { document.getElementById('chat-window').style.display = 'none'; }
 
 function sendMessage() {
-    const input = document.getElementById('user-msg');
-    const chatBox = document.getElementById('chat-box');
-    if (!input.value) return;
+   // Inside sendMessage(), find the 'CAT-alyst' response line and update it:
+if (activeMentor === 'CAT-alyst') {
+    const logicQuestions = [
+        "If all Architects are Artists, and some Artists are Engineers, are all Architects Engineers? (Answer: No)",
+        "Clock Math: What is the angle between the hands at 3:30? (Answer: 75°)",
+        "Logic: A is taller than B, B is taller than C. Is C taller than A? (Answer: No)"
+    ];
+    const randomQ = logicQuestions[Math.floor(Math.random() * logicQuestions.length)];
+    response = `Here is a quick logic check: ${randomQ}`;
 
-    // Add user message
-    chatBox.innerHTML += `<div class="msg user">${input.value}</div>`;
-    
-    // Simulated AI Logic
-    let response = "That's a great question. Let me analyze that for your architecture portfolio.";
-    if (activeMentor === 'CAT-alyst') response = "Focus on the logic here: If P implies Q, then not-Q implies not-P. Want a practice sum?";
-    
-    setTimeout(() => {
-        chatBox.innerHTML += `<div class="msg ai">${response}</div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }, 1000);
-
-    input.value = "";
 }
 
 // Update the header icon in index.html to: <i data-lucide="message-circle" onclick="openMessaging()"></i>
