@@ -59,8 +59,10 @@ body {
 
 /* The Dopamine Heart Animation */
 .heart-container {
-    position: relative;
-    overflow: hidden;
+    position: relative; /* This is the "anchor" for the heart */
+    width: 100%;
+    display: block;
+    cursor: pointer;
 }
 
 .heart-pop {
