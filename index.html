@@ -2,32 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GrowthGram | Principal Srikanth</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>GrowthGram</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="app-wrapper">
-        <header class="top-nav">
-            <h1 class="logo">GrowthGram</h1>
-            <div class="nav-icons">💬 <span class="badge"></span></div>
+        <header class="insta-header">
+            <h1 class="logo-font">GrowthGram</h1>
+            <div class="header-right">
+                <i data-lucide="heart"></i>
+                <i data-lucide="message-circle"></i>
+            </div>
         </header>
 
         <div id="story-bar" class="story-container"></div>
 
-        <main id="main-feed" class="feed-container"></main>
+        <main id="main-feed"></main>
 
-        <nav class="bottom-bar">
-            <div class="tab active">🏠</div>
-            <div class="tab">🔍</div>
-            <div class="tab plus">➕</div>
-            <div class="tab">📈</div>
-            <div class="tab">👤</div>
+        <nav class="insta-nav">
+            <i data-lucide="home" class="nav-active"></i>
+            <i data-lucide="search"></i>
+            <i data-lucide="plus-square"></i>
+            <i data-lucide="clapperboard"></i>
+            <i data-lucide="circle-user"></i>
         </nav>
     </div>
 
     <audio id="cash-sound" src="https://assets.mixkit.co/active_storage/sfx/2004/2004-preview.mp3"></audio>
-
     <script src="app.js"></script>
 </body>
 </html>
