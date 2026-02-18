@@ -57,38 +57,3 @@ body {
 .nav-btn { background: none; border: none; font-size: 22px; color: white; opacity: 0.6; }
 .nav-btn.active { opacity: 1; color: var(--insta-gold); }
 
-/* The Dopamine Heart Animation */
-.heart-container {
-    position: relative;
-    overflow: hidden;
-}
-
-.heart-pop {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    font-size: 80px;
-    color: white;
-    text-shadow: 0 0 20px rgba(0,0,0,0.5);
-    pointer-events: none;
-    z-index: 10;
-    animation: heartAnim 0.8s cubic-bezier(0.17, 0.89, 0.32, 1.49);
-}
-
-@keyframes heartAnim {
-    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.9; }
-    100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
-}
-
-/* Make the image flash slightly on like */
-.liked-flash {
-    animation: flash 0.3s;
-}
-
-@keyframes flash {
-    0% { filter: brightness(1); }
-    50% { filter: brightness(1.3); }
-    100% { filter: brightness(1); }
-}
