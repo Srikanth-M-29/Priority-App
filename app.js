@@ -23,27 +23,49 @@ function renderStories() {
 
 function renderFeed() {
     const feed = document.getElementById('main-feed');
-    // Simulate infinite scroll by repeating content
     const posts = [...contentVault, ...contentVault, ...contentVault];
+    
     feed.innerHTML = posts.map(post => `
         <article class="post-card">
             <div class="post-header"><b>Principal Srikanth</b> • 1h</div>
-            <img class="post-img" src="${post.img}" ondblclick="triggerDopamine(this)">
-            <div class="post-actions"><span>❤️</span> <span>💬</span> <span>🔖</span></div>
+            
+            <div class="heart-container" ondblclick="triggerDopamine(this)">
+                <img class="post-img" src="${post.img}">
+                <div class="heart-overlay"></div> 
+            </div>
+
+            <div class="post-actions">
+                <span onclick="this.innerText = this.innerText == '❤️' ? '🤍' : '❤️'">🤍</span> 
+                <span>💬</span> 
+                <span>🔖</span>
+            </div>
             <div class="post-caption"><b>GrowthGram</b> ${post.caption}</div>
         </article>
     `).join('');
 }
 
-function triggerDopamine(el) {
-    document.getElementById('sound-money').play();
-    el.style.filter = "brightness(1.5)";
-    setTimeout(() => el.style.filter = "brightness(1)", 200);
-}
+function triggerDopamine(container) {
+    // 1. Play Money Sound
+    const sound = document.getElementById('sound-money');
+    sound.currentTime = 0; // Reset sound so you can "spam" likes
+    sound.play();
 
-function playQuiz() {
-    document.getElementById('sound-pop').play();
-    alert("Story Quiz: What is the ROI of a LEED-certified building? (Check DMs for answer)");
-}
+    // 2. Visual Flash on Image
+    const img = container.querySelector('.post-img');
+    img.classList.add('liked-flash');
+    setTimeout(() => img.classList.remove('liked-flash'), 300);
 
-window.onload = init;
+    // 3. Spawn the Heart
+    const heart = document.createElement('div');
+    heart.innerHTML = '❤️';
+    heart.className = 'heart-pop';
+    container.appendChild(heart);
+
+    // 4. Clean up the heart after animation
+    setTimeout(() => {
+        heart.remove();
+    }, 800);
+
+    // 5. Logic: Save this to "Learned" or "Library"
+    console.log("Post saved to Study Library");
+}
