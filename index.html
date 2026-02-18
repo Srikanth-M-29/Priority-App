@@ -1,44 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>GrowthGram | Principal Srikanth</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 <body>
-    <div class="app-wrapper">
-        <div id="home-view" class="view">
-            <div class="hero-section">
-                <div class="overlay">
-                    <h1>Principal Srikanth</h1>
-                    <p id="ai-roast">Designing the future...</p>
-                </div>
+    <div class="app-container">
+        <header class="top-header">
+            <h1 class="logo">GrowthGram</h1>
+            <div class="header-icons">
+                <span class="dm-icon" onclick="showDM()">💬<span class="badge">1</span></span>
             </div>
+        </header>
+
+        <div id="story-bar" class="story-container">
             </div>
 
-        <div id="library-view" class="view" style="display:none;">
-            <section class="library-header">
-                <h2>📚 The Library</h2>
-                <p>Strictness Level: <b>HIGH</b></p>
-            </section>
-
-            <section class="study-input stat-card">
-                <select id="study-subject">
-                    <option value="CAT">CAT (Logic/Math)</option>
-                    <option value="IELTS">IELTS (English)</option>
-                    <option value="News">Political News</option>
-                </select>
-                <textarea id="study-summary" placeholder="Summary: What did you learn?"></textarea>
-                <textarea id="study-question" placeholder="The Big Question: What's still blurry?"></textarea>
-                
-                <div class="slider-box">
-                    <label>Confidence: <span id="conf-val">5</span>/10</label>
-                    <input type="range" id="study-confidence" min="1" max="10" value="5" oninput="document.getElementById('conf-val').innerText=this.value">
-                </div>
-                
-                <button class="seal-btn" onclick="saveStudyNote()">Log Study Session</button>
-            </section>
-
-            <div id="study-feed"></div>
-        </div>
+        <main id="main-feed" class="feed-container">
+            </main>
 
         <nav class="bottom-nav">
-            <button onclick="showView('home')" class="nav-item active">🏠</button>
-            <button onclick="showView('library')" class="nav-item">📚</button>
+            <button class="nav-btn active">🏠</button>
+            <button class="nav-btn">🔍</button>
+            <button class="nav-btn" onclick="addPost()">➕</button>
+            <button class="nav-btn">📉</button>
+            <button class="nav-btn">👤</button>
         </nav>
     </div>
+
+    <audio id="sound-money" src="https://assets.mixkit.co/active_storage/sfx/2004/2004-preview.mp3"></audio>
+    <audio id="sound-pop" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+
     <script src="app.js"></script>
 </body>
+</html>
