@@ -1,57 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Principal Architect Command Center</title>
-    <link rel="stylesheet" href="style.css">
-</head>
 <body>
     <div class="app-wrapper">
-        <div id="gallery-prime" class="hero-section">
-            <div class="overlay">
-                <h1 id="greeting">Principal Srikanth</h1>
-                <p id="ai-roast">Designing the future, one log at a time.</p>
+        <div id="home-view" class="view">
+            <div class="hero-section">
+                <div class="overlay">
+                    <h1>Principal Srikanth</h1>
+                    <p id="ai-roast">Designing the future...</p>
+                </div>
             </div>
+            </div>
+
+        <div id="library-view" class="view" style="display:none;">
+            <section class="library-header">
+                <h2>📚 The Library</h2>
+                <p>Strictness Level: <b>HIGH</b></p>
+            </section>
+
+            <section class="study-input stat-card">
+                <select id="study-subject">
+                    <option value="CAT">CAT (Logic/Math)</option>
+                    <option value="IELTS">IELTS (English)</option>
+                    <option value="News">Political News</option>
+                </select>
+                <textarea id="study-summary" placeholder="Summary: What did you learn?"></textarea>
+                <textarea id="study-question" placeholder="The Big Question: What's still blurry?"></textarea>
+                
+                <div class="slider-box">
+                    <label>Confidence: <span id="conf-val">5</span>/10</label>
+                    <input type="range" id="study-confidence" min="1" max="10" value="5" oninput="document.getElementById('conf-val').innerText=this.value">
+                </div>
+                
+                <button class="seal-btn" onclick="saveStudyNote()">Log Study Session</button>
+            </section>
+
+            <div id="study-feed"></div>
         </div>
 
-        <section class="stat-card">
-            <div class="stat-header">
-                <span>Monthly Revenue Goal</span>
-                <b id="revenue-percent">0%</b>
-            </div>
-            <div class="progress-container">
-                <div id="revenue-bar" class="progress-fill"></div>
-            </div>
-            <div class="quick-money">
-                <button onclick="addRevenue(5000)">+5k</button>
-                <button onclick="addRevenue(10000)">+10k</button>
-                <button onclick="addRevenue(50000)">+50k</button>
-            </div>
-        </section>
-
-        <section class="contract-section">
-            <h3>At Any Cost (Daily Contract)</h3>
-            <div class="task-row">
-                <button id="task1" class="task-btn" onclick="toggleTask('task1')">Business Profit Action</button>
-                <button id="task2" class="task-btn" onclick="toggleTask('task2')">CAT/IELTS Study</button>
-                <button id="task3" class="task-btn" onclick="toggleTask('task3')">Architecture Research</button>
-            </div>
-            <button class="seal-btn" onclick="sealDay()">Seal the Day</button>
-        </section>
-
-        <section class="history-section">
-            <h3>Legacy Timeline</h3>
-            <div id="growth-timeline"></div>
-        </section>
-
         <nav class="bottom-nav">
-            <button class="nav-item active">🏠</button>
-            <button class="nav-item">💰</button>
-            <button class="nav-item">📐</button>
-            <button class="nav-item">📚</button>
+            <button onclick="showView('home')" class="nav-item active">🏠</button>
+            <button onclick="showView('library')" class="nav-item">📚</button>
         </nav>
     </div>
     <script src="app.js"></script>
 </body>
-</html>
