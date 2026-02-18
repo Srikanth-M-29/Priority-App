@@ -1,273 +1,161 @@
-let savedPosts = JSON.parse(localStorage.getItem('growthGramPosts')) || [
-    { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c', cap: 'Architecture: Modern glass facades can reduce lighting costs by 30%.', time: '18 Feb 2026, 10:00' }
-];
+let savedPosts = JSON.parse(localStorage.getItem('gGram_posts')) || [];
+let studyNotes = JSON.parse(localStorage.getItem('gGram_notes')) || [];
+let liveNews = [];
 
-let studyNotes = JSON.parse(localStorage.getItem('growthGramNotes')) || [];
-let liveArchiNews = [];
+const API_ARCHI = 'https://api.rss2json.com/v1/api.json?rss_url=https://www.archdaily.com/feed';
+const API_BIZ = 'https://api.rss2json.com/v1/api.json?rss_url=https://www.reutersagency.com/feed/?best-topics=business&format=xml';
 
-// Sources
-const ARCHI_FEED_URL = 'https://api.rss2json.com/v1/api.json?rss_url=https://www.archdaily.com/feed';
-
-const storyData = {
-    '💰': { title: 'Revenue Goal', detail: 'Target: $50k Milestone for Q1. Current: Design Phase approval pending.', img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f', link: '#' },
-    '📚': { title: 'CAT Formula', detail: 'Logarithms: log(ab) = log a + log b. Simplify to solve faster.', img: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb', link: 'https://iim-cat.com' },
-    '📐': { title: 'Architecture News', detail: 'Fetching latest from ArchDaily...', img: '', link: '#' }
+const stories = {
+    '📈': { title: 'Market Logic', detail: 'Reading financial news builds CAT comprehension.', img: 'https://images.unsplash.com/photo-1611974714024-462be009186d', link: '#' },
+    '🏛️': { title: 'Pritzker Prep', detail: 'Study the masters of 2026.', img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab', link: '#' }
 };
 
-const FINANCE_FEED = 'https://api.rss2json.com/v1/api.json?rss_url=https://www.reutersagency.com/feed/?best-topics=business&format=xml';
-
-async function fetchLiveNews() {
-    try {
-        // Fetch Architecture
-        const resArchi = await fetch(ARCHI_FEED_URL);
-        const dataArchi = await resArchi.json();
-        if (dataArchi.status === 'ok') liveArchiNews = dataArchi.items;
-
-        // Fetch Business/Finance
-        const resFin = await fetch(FINANCE_FEED);
-        const dataFin = await resFin.json();
-        if (dataFin.status === 'ok') {
-            // Mix these into the feed as well
-            dataFin.items.slice(0, 3).forEach(item => {
-                liveArchiNews.push({
-                    user: 'business_intel',
-                    title: item.title,
-                    link: item.link,
-                    thumbnail: 'https://images.unsplash.com/photo-1611974714024-462be009186d' // Stock finance image
-                });
-            });
-        }
-        renderFeed(); // Refresh the feed once data is in
-    } catch (e) { console.log("News sync failed."); }
+async function init() {
+    await fetchGlobalNews();
+    renderStories();
+    renderFeed();
+    lucide.createIcons();
 }
 
-async function fetchLiveNews() {
+async function fetchGlobalNews() {
     try {
-        const res = await fetch(ARCHI_FEED_URL);
-        const data = await res.json();
-        if (data.status === 'ok') {
-            liveArchiNews = data.items;
-            storyData['📐'].detail = liveArchiNews[0].title;
-            storyData['📐'].img = liveArchiNews[0].thumbnail || 'https://images.unsplash.com/photo-1487958449943-2429e8be8625';
-            storyData['📐'].link = liveArchiNews[0].link;
-        }
-    } catch (e) { console.log("News fetch failed."); }
+        const [res1, res2] = await Promise.all([fetch(API_ARCHI), fetch(API_BIZ)]);
+        const data1 = await res1.json();
+        const data2 = await res2.json();
+        
+        if(data1.items) liveNews.push(...data1.items.slice(0,3).map(i => ({...i, source: 'arch_global'})));
+        if(data2.items) liveNews.push(...data2.items.slice(0,2).map(i => ({...i, source: 'biz_intel'})));
+    } catch(e) { console.log("News offline"); }
 }
 
 function renderStories() {
     const bar = document.getElementById('story-bar');
-    const items = Object.keys(storyData);
-    bar.innerHTML = items.map(icon => `
+    bar.innerHTML = Object.keys(stories).map(icon => `
         <div class="story-ring" onclick="openStory('${icon}')"><div class="story-inner">${icon}</div></div>
     `).join('');
 }
 
-// Function to combine your posts with global news
 function renderFeed() {
     const feed = document.getElementById('main-feed');
+    let combined = savedPosts.map((p, i) => ({...p, type:'user', id:i}));
     
-    // 1. Map your personal posts
-    let combinedFeed = savedPosts.map((p, i) => ({...p, type: 'personal', id: i}));
-
-    // 2. Inject News items as "Posts"
-    liveArchiNews.slice(0, 5).forEach((news) => {
-        combinedFeed.push({
-            user: 'archdaily_global',
-            img: news.thumbnail || news.enclosure.link || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab',
-            cap: `[GLOBAL NEWS] ${news.title}`,
-            time: 'Live Update',
-            link: news.link,
+    liveNews.forEach(n => {
+        combined.push({
+            user: n.source,
+            img: n.thumbnail || n.enclosure?.link || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab',
+            cap: n.title,
+            time: 'Global Update',
+            link: n.link,
             type: 'news'
         });
     });
 
-    // 3. Sort or Shuffle (Optional: here we just show yours first, then news)
-    feed.innerHTML = combinedFeed.map((p, i) => `
+    feed.innerHTML = combined.map((p, i) => `
         <article class="post">
-            <div class="post-header">
-                <span class="username">${p.user}</span>
-                ${p.type === 'news' ? '<span style="color:#0095f6; font-size:10px; margin-left:5px;">Follow</span>' : ''}
-            </div>
-            <div class="img-box" ${p.type === 'news' ? `onclick="window.open('${p.link}', '_blank')"` : `ondblclick="doLike(this, ${i})"`}>
+            <div class="post-header"><span class="username">${p.user}</span></div>
+            <div class="img-box" ${p.type === 'news' ? `onclick="window.open('${p.link}')"` : `ondblclick="doLike(this, ${i})"`}>
                 <img src="${p.img}" class="post-img">
-                ${p.type === 'personal' ? '<div class="heart-pop">❤️</div>' : ''}
+                <div class="heart-pop">❤️</div>
             </div>
-            <div class="action-bar">
-                <i data-lucide="heart" class="${p.type === 'news' ? 'news-heart' : ''}" id="like-${i}" onclick="toggleLike(${i})"></i>
-                <i data-lucide="message-circle" onclick="${p.type === 'news' ? `openChat('Archi-Intel')` : ''}"></i>
-                <i data-lucide="send"></i>
-            </div>
-            <div class="caption-area">
-                <b>${p.user}</b> ${p.cap}
-                <div style="font-size: 10px; color: #8e8e8e; margin-top: 5px;">${p.time}</div>
-            </div>
+            <div class="caption-area"><b>${p.user}</b> ${p.cap}</div>
         </article>
     `).join('');
     lucide.createIcons();
 }
 
-let storyTimer;
+// Story Controls
+let sTimer;
 function openStory(icon) {
-    const data = storyData[icon];
+    const data = stories[icon];
     const viewer = document.getElementById('story-viewer');
-    const bar = document.getElementById('story-progress-bar');
-    document.getElementById('story-category-name').innerText = icon + " Insights";
     document.getElementById('story-title').innerText = data.title;
     document.getElementById('story-detail').innerText = data.detail;
-    
     const sImg = document.getElementById('story-img');
-    if(data.img) { sImg.src = data.img; sImg.style.display = 'block'; }
-    else { sImg.style.display = 'none'; }
-    
-    document.getElementById('story-link').href = data.link;
+    sImg.src = data.img; sImg.style.display = 'block';
     viewer.style.display = 'flex';
-    
-    let width = 0;
-    clearInterval(storyTimer);
-    storyTimer = setInterval(() => {
-        if (width >= 100) { closeStory(); } 
-        else { width++; bar.style.width = width + '%'; }
-    }, 50); 
+
+    let w = 0; clearInterval(sTimer);
+    sTimer = setInterval(() => {
+        if(w >= 100) closeStory();
+        else { w++; document.getElementById('story-progress-bar').style.width = w + '%'; }
+    }, 50);
 }
+function closeStory() { document.getElementById('story-viewer').style.display = 'none'; clearInterval(sTimer); }
 
-function closeStory() { document.getElementById('story-viewer').style.display = 'none'; clearInterval(storyTimer); }
-
-// Notes Logic
-function openNote() {
-    const title = document.getElementById('story-title').innerText;
-    document.getElementById('note-context').innerText = "Analyzing: " + title;
-    document.getElementById('note-modal').style.display = 'block';
+// Notes System
+function openNote() { 
+    document.getElementById('note-context').innerText = "Topic: " + document.getElementById('story-title').innerText;
+    document.getElementById('note-modal').style.display = 'block'; 
 }
-
 function closeNote() { document.getElementById('note-modal').style.display = 'none'; }
-
 function saveNote() {
     const text = document.getElementById('note-text').value;
-    const context = document.getElementById('note-context').innerText;
-    if(!text.trim()) return;
-    
-    studyNotes.push({ date: new Date().toLocaleDateString(), context, content: text });
-    localStorage.setItem('growthGramNotes', JSON.stringify(studyNotes));
-    document.getElementById('note-text').value = "";
-    closeNote();
-    document.getElementById('cash-sound').play();
+    if(!text) return;
+    studyNotes.push({ context: document.getElementById('note-context').innerText, text: text });
+    localStorage.setItem('gGram_notes', JSON.stringify(studyNotes));
+    closeNote(); document.getElementById('cash-sound').play();
 }
 
-// Like Logic
+// Mentor Chat
+let activeMentor = "";
+function openChat(m) {
+    activeMentor = m;
+    document.getElementById('active-chat-name').innerText = m;
+    document.getElementById('messaging-screen').style.display = 'none';
+    document.getElementById('chat-window').style.display = 'block';
+    document.getElementById('chat-box').innerHTML = `<div class="msg ai">I am scanning your saved notes now... how can I guide you?</div>`;
+}
+function closeChat() { document.getElementById('chat-window').style.display = 'none'; }
+function openMessaging() { document.getElementById('messaging-screen').style.display = 'block'; }
+function closeMessaging() { document.getElementById('messaging-screen').style.display = 'none'; }
+
+function sendMessage() {
+    const inp = document.getElementById('user-msg');
+    const box = document.getElementById('chat-box');
+    if(!inp.value) return;
+    box.innerHTML += `<div class="msg user">${inp.value}</div>`;
+    
+    let reply = "As a mentor, I suggest looking at the structural integrity of this idea.";
+    if(inp.value.toLowerCase().includes('revise')) {
+        if(studyNotes.length > 0) {
+            const last = studyNotes[studyNotes.length - 1];
+            reply = `You recently noted: "${last.text}". How does this impact your current site visit?`;
+        } else {
+            reply = "Take a note in a story first so I can analyze your thinking!";
+        }
+    }
+    setTimeout(() => { box.innerHTML += `<div class="msg ai">${reply}</div>`; box.scrollTop = box.scrollHeight; }, 600);
+    inp.value = "";
+}
+
+// Double Tap Like
 function doLike(container, id) {
     const heart = container.querySelector('.heart-pop');
     document.getElementById('cash-sound').play();
     heart.classList.add('pop-active');
     setTimeout(() => heart.classList.remove('pop-active'), 800);
-    document.getElementById(`like-${id}`).classList.add('liked-red');
 }
 
-function toggleLike(id) { document.getElementById(`like-${id}`).classList.toggle('liked-red'); }
-
-// Post Upload
+// Uploads
+let tempImg = "";
 function openUpload() { document.getElementById('upload-modal').style.display = 'block'; }
 function closeUpload() { document.getElementById('upload-modal').style.display = 'none'; }
-function previewImage(event) {
+function previewImage(e) {
     const reader = new FileReader();
-    reader.onload = () => {
-        const output = document.getElementById('img-preview');
-        output.src = reader.result; output.style.display = 'block';
-        document.getElementById('upload-placeholder').style.display = 'none';
+    reader.onload = () => { 
+        document.getElementById('img-preview').src = reader.result;
+        document.getElementById('img-preview').style.display = 'block';
+        document.getElementById('up-hint').style.display = 'none';
+        tempImg = reader.result;
     };
-    reader.readAsDataURL(event.target.files[0]);
+    reader.readAsDataURL(e.target.files[0]);
 }
-
 function submitPost() {
-    const img = document.getElementById('img-preview').src;
     const cap = document.getElementById('caption-input').value;
-    if(!img || img.includes('window')) return alert("Select a photo!");
-    
-    const now = new Date();
-    const time = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
-    
-    savedPosts.unshift({ user: 'principal_srikanth', img, cap, time });
-    localStorage.setItem('growthGramPosts', JSON.stringify(savedPosts));
+    if(!tempImg) return alert("Select a photo first");
+    savedPosts.unshift({ user: 'principal_srikanth', img: tempImg, cap: cap });
+    localStorage.setItem('gGram_posts', JSON.stringify(savedPosts));
     renderFeed(); closeUpload();
-}
-
-// Messaging
-function openMessaging() { document.getElementById('messaging-screen').style.display = 'block'; }
-function closeMessaging() { document.getElementById('messaging-screen').style.display = 'none'; }
-
-let activeMentor = "";
-function openChat(name) {
-    activeMentor = name;
-    document.getElementById('active-chat-name').innerText = name;
-    document.getElementById('chat-window').style.display = 'block';
-    const box = document.getElementById('chat-box');
-    
-    if(name === 'Archi-Intel') {
-        let news = liveArchiNews.slice(0,2).map(n => `• <a href="${n.link}" style="color:gold">${n.title}</a>`).join('<br><br>');
-        box.innerHTML = `<div class="msg ai"><b>Today's Headlines:</b><br><br>${news}</div>`;
-    } else {
-        box.innerHTML = `<div class="msg ai">Ready for CAT logic? Ask me to "revise notes" if you've been studying!</div>`;
-    }
-}
-
-function closeChat() { document.getElementById('chat-window').style.display = 'none'; }
-
-// --- UPGRADED MENTOR LOGIC ---
-function sendMessage() {
-    const input = document.getElementById('user-msg');
-    const box = document.getElementById('chat-box');
-    const text = input.value.trim();
-    if(!text) return;
-
-    box.innerHTML += `<div class="msg user">${text}</div>`;
-    let response = "";
-
-    // Mentorship Logic for Archi-Intel
-    if (activeMentor === 'Archi-Intel') {
-        if (text.toLowerCase().includes('revise') || text.toLowerCase().includes('note')) {
-            response = analyzeArchiNotes();
-        } else if (text.toLowerCase().includes('portfolio') || text.toLowerCase().includes('career')) {
-            response = "For a Pritzker-track portfolio, don't just show the building. Show the *problem* you solved. Are your recent site visits focusing on social impact or just aesthetics?";
-        } else {
-            response = "Interesting point. From an architectural standpoint, how does this affect the 'human flow' of the space? Remember: Form follows function, but function follows human behavior.";
-        }
-    } 
-
-    // Mentorship Logic for CAT-alyst
-    else if (activeMentor === 'CAT-alyst') {
-        if (text.toLowerCase().includes('revise')) {
-            response = analyzeCATNotes();
-        } else {
-            const puzzles = [
-                "Logic check: If you're designing a 10-story building and the elevator takes 15s per floor, how long to reach the top from the 1st? (Mental math is key for CAT!)",
-                "Verbal Ability: Define 'Ephemeral' in an architectural context. (Answer: Lasting for a very short time—like a pavilion)."
-            ];
-            response = puzzles[Math.floor(Math.random() * puzzles.length)];
-        }
-    }
-
-    setTimeout(() => { 
-        box.innerHTML += `<div class="msg ai">${response}</div>`; 
-        box.scrollTop = box.scrollHeight; 
-    }, 600);
-    input.value = "";
-}
-
-// AI Analysis of your specific Architectural reflections
-function analyzeArchiNotes() {
-    if (studyNotes.length === 0) return "I don't see any design reflections yet. Go to your stories, read an article, and 'Take Note'. Then I can analyze your thinking.";
-    
-    const latest = studyNotes[studyNotes.length - 1];
-    return `I've analyzed your note on <b>${latest.context}</b>. You mentioned: "${latest.content}". <br><br><b>Mentor Advice:</b> Connect this to your site work. If you're studying glass facades, look at the curing concrete today—is the thermal mass sufficient for that much glass?`;
-}
-
-function analyzeCATNotes() {
-    // Logic to pull only CAT-related notes
-    const catNotes = studyNotes.filter(n => n.context.includes('CAT'));
-    if (catNotes.length === 0) return "No CAT notes found. Start taking notes on formulas to build your logic database.";
-    return "Your logic patterns are improving. Focus more on the 'Syllogism' notes you took—that's a high-weightage area.";
-}
-    setTimeout(() => { box.innerHTML += `<div class="msg ai">${response}</div>`; box.scrollTop = box.scrollHeight; }, 600);
-    input.value = "";
 }
 
 window.onload = init;
