@@ -1,83 +1,58 @@
-// 1. DATA & STATE
-const contentVault = [
-    { type: 'arch', img: 'https://images.unsplash.com/photo-1511818966892-d7d671e672a2', caption: '💡 Pritzker Insight: Minimalist glass structures increase property value by 20%. #FirmProfit' },
-    { type: 'cat', img: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb', caption: '🧠 Logic Pulse: If 5 architects design 5 firms in 5 days, how long for 100 architects? #CAT' },
-    { type: 'news', img: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e', caption: '📊 Market News: Real estate prices in India expected to surge after new policy update. #Business' }
+const feedData = [
+    { user: 'Principal Srikanth', img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab', caption: '🏢 Architectural Research: Modern glass facades can reduce lighting costs by 30%.' },
+    { user: 'Principal Srikanth', img: 'https://images.unsplash.com/photo-1509228468518-180dd48219d8', caption: '🧠 CAT Prep: Logical reasoning is just architecture for the mind. Solve this morning puzzle.' },
+    { user: 'Principal Srikanth', img: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8', caption: '📚 IELTS Prep: Use the word "Pragmatic" in your next client meeting. Level up your vocabulary.' }
 ];
 
-let state = JSON.parse(localStorage.getItem('principalData')) || {
-    revenue: 0,
-    notes: [],
-    history: []
-};
-
-// 2. INITIALIZE
-function init() {
-    renderStories();
-    renderFeed();
-}
-
-// 3. RENDER STORIES
-function renderStories() {
-    const bar = document.getElementById('story-bar');
-    if (!bar) return;
-    const icons = ['📐', '📚', '💰', '📉', '🏛️'];
-    bar.innerHTML = icons.map(icon => `
-        <div class="story-circle" onclick="playQuiz()">
-            <div class="story-inner">${icon}</div>
-        </div>
-    `).join('');
-}
-
-// 4. RENDER FEED (The Instagram Logic)
-function renderFeed() {
+function loadApp() {
     const feed = document.getElementById('main-feed');
-    if (!feed) return;
+    const stories = document.getElementById('story-bar');
 
-    // We repeat the vault to simulate an infinite scroll
-    const posts = [...contentVault, ...contentVault, ...contentVault];
-    
-    feed.innerHTML = posts.map((post, index) => `
+    // 1. Load Stories
+    const icons = ['💰', '📐', '📚', '📈', '🏢', '🏗️'];
+    stories.innerHTML = icons.map(icon => `
+        <div class="story-circle"><div class="story-inner">${icon}</div></div>
+    `).join('');
+
+    // 2. Load Feed (Doubled for scrolling)
+    const allPosts = [...feedData, ...feedData];
+    feed.innerHTML = allPosts.map(post => `
         <article class="post-card">
-            <div class="post-header"><b>Principal Srikanth</b> • 1h</div>
-            
-            <div class="heart-container" ondblclick="triggerDopamine(this)">
-                <img class="post-img" src="${post.img}">
+            <div class="post-user">${post.user}</div>
+            <div class="img-container" onclick="handleLike(this)">
+                <img src="${post.img}" class="post-img">
+                <div class="heart-pop">❤️</div>
             </div>
-
-            <div class="post-actions">
-                <span class="like-btn" onclick="toggleLike(this)">🤍</span> 
-                <span>💬</span> 
-                <span>🔖</span>
+            <div class="post-info">
+                <div class="post-caption"><b>GrowthGram</b> ${post.caption}</div>
             </div>
-            <div class="post-caption"><b>GrowthGram</b> ${post.caption}</div>
         </article>
     `).join('');
 }
 
-// 5. THE DOPAMINE ENGINE (Heart Pop + Sound)
-function triggerDopamine(container) {
-    // Play Sound
-    const sound = document.getElementById('sound-money');
-    if (sound) {
-        sound.currentTime = 0;
-        sound.play();
+// Double-Tap Detection Logic
+let lastClick = 0;
+function handleLike(container) {
+    const time = new Date().getTime();
+    if (time - lastClick < 300) {
+        showHeart(container);
     }
+    lastClick = time;
+}
 
-    // Visual Flash
-    const img = container.querySelector('.post-img');
-    img.classList.add('liked-flash');
-    setTimeout(() => img.classList.remove('liked-flash'), 300);
+function showHeart(container) {
+    const heart = container.querySelector('.heart-pop');
+    const audio = document.getElementById('cash-sound');
 
-    // Spawn Heart
-    const heart = document.createElement('div');
-    heart.innerHTML = '❤️';
-    heart.className = 'heart-pop';
-    container.appendChild(heart);
+    // Play Reward Sound
+    if (audio) { audio.currentTime = 0; audio.play(); }
 
-    // Auto-fill the little heart icon below the image
-    const postCard = container.closest('.post-card');
-    const likeBtn = postCard.querySelector('.like-btn');
-    likeBtn.innerText = '❤️';
+    // Trigger Animation
+    heart.classList.remove('animate-heart');
+    void heart.offsetWidth; // Force CSS refresh
+    heart.classList.add('animate-heart');
 
-    //
+    console.log("Dopamine hit logged!");
+}
+
+window.addEventListener('DOMContentLoaded', loadApp);
