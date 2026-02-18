@@ -52,5 +52,24 @@
 
     <audio id="cash-sound" src="https://assets.mixkit.co/active_storage/sfx/2004/2004-preview.mp3"></audio>
     <script src="app.js"></script>
+
+    <div id="story-viewer" class="story-overlay">
+    <div class="story-progress-container">
+        <div id="story-progress-bar" class="story-progress-fill"></div>
+    </div>
+    <div class="story-header">
+        <div class="story-user-info">
+            <div class="mini-avatar"></div>
+            <span id="story-category-name">Category</span>
+        </div>
+        <button class="close-story" onclick="closeStory()">×</button>
+    </div>
+    <div class="story-content">
+        <div id="story-text-container">
+            <h2 id="story-title">Formula</h2>
+            <p id="story-detail">Description goes here...</p>
+        </div>
+    </div>
+</div>
 </body>
 </html>
