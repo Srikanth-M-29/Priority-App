@@ -6,8 +6,8 @@ const API_ARCHI = 'https://api.rss2json.com/v1/api.json?rss_url=https://www.arch
 const API_BIZ = 'https://api.rss2json.com/v1/api.json?rss_url=https://www.reutersagency.com/feed/?best-topics=business&format=xml';
 
 const stories = {
-    '📈': { title: 'Market Logic', detail: 'Reading financial news builds CAT comprehension.', img: 'https://images.unsplash.com/photo-1611974714024-462be009186d', link: '#' },
-    '🏛️': { title: 'Pritzker Prep', detail: 'Study the masters of 2026.', img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab', link: '#' }
+    '📈': { title: 'Market Trends', detail: 'Financial literacy is the backbone of great architecture. Study today\'s business shifts.', img: 'https://images.unsplash.com/photo-1611974714024-462be009186d', link: '#' },
+    '🏛️': { title: 'Pritzker Path', detail: 'Form follows function. Analyze how modern space-saving works in the news.', img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab', link: '#' }
 };
 
 async function init() {
@@ -20,12 +20,11 @@ async function init() {
 async function fetchGlobalNews() {
     try {
         const [res1, res2] = await Promise.all([fetch(API_ARCHI), fetch(API_BIZ)]);
-        const data1 = await res1.json();
-        const data2 = await res2.json();
-        
-        if(data1.items) liveNews.push(...data1.items.slice(0,3).map(i => ({...i, source: 'arch_global'})));
-        if(data2.items) liveNews.push(...data2.items.slice(0,2).map(i => ({...i, source: 'biz_intel'})));
-    } catch(e) { console.log("News offline"); }
+        const d1 = await res1.json();
+        const d2 = await res2.json();
+        if(d1.items) liveNews.push(...d1.items.slice(0,3).map(i => ({...i, source: 'ArchDaily'})));
+        if(d2.items) liveNews.push(...d2.items.slice(0,2).map(i => ({...i, source: 'Reuters Business'})));
+    } catch(e) { console.log("Offline Mode"); }
 }
 
 function renderStories() {
@@ -37,25 +36,37 @@ function renderStories() {
 
 function renderFeed() {
     const feed = document.getElementById('main-feed');
-    let combined = savedPosts.map((p, i) => ({...p, type:'user', id:i}));
+    let combined = [];
     
-    liveNews.forEach(n => {
+    // User posts first
+    savedPosts.forEach((p, i) => {
+        combined.push({...p, type:'user', id: i});
+    });
+
+    // Then News posts
+    liveNews.forEach((n, i) => {
         combined.push({
             user: n.source,
             img: n.thumbnail || n.enclosure?.link || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab',
             cap: n.title,
             time: 'Global Update',
             link: n.link,
-            type: 'news'
+            type: 'news',
+            id: 'news-' + i
         });
     });
 
-    feed.innerHTML = combined.map((p, i) => `
+    feed.innerHTML = combined.map((p) => `
         <article class="post">
-            <div class="post-header"><span class="username">${p.user}</span></div>
-            <div class="img-box" ${p.type === 'news' ? `onclick="window.open('${p.link}')"` : `ondblclick="doLike(this, ${i})"`}>
+            <div class="post-header"><span class="username">@${p.user}</span></div>
+            <div class="img-box" ${p.type === 'news' ? `onclick="window.open('${p.link}')"` : `ondblclick="doLike(this, '${p.id}')"`}>
                 <img src="${p.img}" class="post-img">
                 <div class="heart-pop">❤️</div>
+            </div>
+            <div class="post-actions">
+                <i data-lucide="heart" id="heart-${p.id}" onclick="toggleLike('${p.id}')"></i>
+                <i data-lucide="message-circle" onclick="openMessaging()"></i>
+                <i data-lucide="send"></i>
             </div>
             <div class="caption-area"><b>${p.user}</b> ${p.cap}</div>
         </article>
@@ -63,15 +74,33 @@ function renderFeed() {
     lucide.createIcons();
 }
 
-// Story Controls
+// Like System
+function doLike(container, id) {
+    const heartPop = container.querySelector('.heart-pop');
+    const heartIcon = document.getElementById('heart-' + id);
+    document.getElementById('cash-sound').play();
+    heartPop.classList.add('pop-active');
+    heartIcon.classList.add('liked');
+    setTimeout(() => heartPop.classList.remove('pop-active'), 800);
+    lucide.createIcons();
+}
+
+function toggleLike(id) {
+    const icon = document.getElementById('heart-' + id);
+    icon.classList.toggle('liked');
+    if(icon.classList.contains('liked')) document.getElementById('cash-sound').play();
+    lucide.createIcons();
+}
+
+// Stories
 let sTimer;
 function openStory(icon) {
     const data = stories[icon];
     const viewer = document.getElementById('story-viewer');
     document.getElementById('story-title').innerText = data.title;
     document.getElementById('story-detail').innerText = data.detail;
-    const sImg = document.getElementById('story-img');
-    sImg.src = data.img; sImg.style.display = 'block';
+    document.getElementById('story-img').src = data.img;
+    document.getElementById('story-img').style.display = 'block';
     viewer.style.display = 'flex';
 
     let w = 0; clearInterval(sTimer);
@@ -82,58 +111,56 @@ function openStory(icon) {
 }
 function closeStory() { document.getElementById('story-viewer').style.display = 'none'; clearInterval(sTimer); }
 
-// Notes System
+// Notes
 function openNote() { 
-    document.getElementById('note-context').innerText = "Topic: " + document.getElementById('story-title').innerText;
+    document.getElementById('note-context').innerText = "Analyzing: " + document.getElementById('story-title').innerText;
     document.getElementById('note-modal').style.display = 'block'; 
 }
 function closeNote() { document.getElementById('note-modal').style.display = 'none'; }
 function saveNote() {
     const text = document.getElementById('note-text').value;
     if(!text) return;
-    studyNotes.push({ context: document.getElementById('note-context').innerText, text: text });
+    studyNotes.push({ context: document.getElementById('note-context').innerText, text: text, date: new Date().toLocaleDateString() });
     localStorage.setItem('gGram_notes', JSON.stringify(studyNotes));
     closeNote(); document.getElementById('cash-sound').play();
+    document.getElementById('note-text').value = "";
 }
 
-// Mentor Chat
+// Messaging & Mentor AI
 let activeMentor = "";
+function openMessaging() { document.getElementById('messaging-screen').style.display = 'block'; }
+function closeMessaging() { document.getElementById('messaging-screen').style.display = 'none'; }
 function openChat(m) {
     activeMentor = m;
     document.getElementById('active-chat-name').innerText = m;
     document.getElementById('messaging-screen').style.display = 'none';
     document.getElementById('chat-window').style.display = 'block';
-    document.getElementById('chat-box').innerHTML = `<div class="msg ai">I am scanning your saved notes now... how can I guide you?</div>`;
+    document.getElementById('chat-box').innerHTML = `<div class="msg ai">Hello Srikanth. I am scanning your ${studyNotes.length} saved study notes. How can I guide you today?</div>`;
 }
 function closeChat() { document.getElementById('chat-window').style.display = 'none'; }
-function openMessaging() { document.getElementById('messaging-screen').style.display = 'block'; }
-function closeMessaging() { document.getElementById('messaging-screen').style.display = 'none'; }
 
 function sendMessage() {
     const inp = document.getElementById('user-msg');
     const box = document.getElementById('chat-box');
-    if(!inp.value) return;
+    const userText = inp.value.trim().toLowerCase();
+    if(!userText) return;
     box.innerHTML += `<div class="msg user">${inp.value}</div>`;
     
-    let reply = "As a mentor, I suggest looking at the structural integrity of this idea.";
-    if(inp.value.toLowerCase().includes('revise')) {
+    let reply = "That's a strategic perspective. How does this align with your 2026 growth goals?";
+    
+    if(userText.includes('revise') || userText.includes('note')) {
         if(studyNotes.length > 0) {
             const last = studyNotes[studyNotes.length - 1];
-            reply = `You recently noted: "${last.text}". How does this impact your current site visit?`;
+            reply = `I've analyzed your recent note on <b>${last.context}</b>. You noted: "${last.text}". A good mentor tip: connect this logic to your current site layout.`;
         } else {
-            reply = "Take a note in a story first so I can analyze your thinking!";
+            reply = "You haven't saved any notes yet! Click '+ Take Note' in any story so I can analyze your thinking.";
         }
+    } else if(activeMentor === 'CAT-alyst' && (userText.includes('quiz') || userText.includes('logic'))) {
+        reply = "CAT Logic: If all Architects are Designers, and Srikanth is an Architect, is Srikanth a Designer? (Yes/No)";
     }
+
     setTimeout(() => { box.innerHTML += `<div class="msg ai">${reply}</div>`; box.scrollTop = box.scrollHeight; }, 600);
     inp.value = "";
-}
-
-// Double Tap Like
-function doLike(container, id) {
-    const heart = container.querySelector('.heart-pop');
-    document.getElementById('cash-sound').play();
-    heart.classList.add('pop-active');
-    setTimeout(() => heart.classList.remove('pop-active'), 800);
 }
 
 // Uploads
@@ -152,8 +179,8 @@ function previewImage(e) {
 }
 function submitPost() {
     const cap = document.getElementById('caption-input').value;
-    if(!tempImg) return alert("Select a photo first");
-    savedPosts.unshift({ user: 'principal_srikanth', img: tempImg, cap: cap });
+    if(!tempImg) return alert("Select a photo!");
+    savedPosts.unshift({ user: 'principal_srikanth', img: tempImg, cap: cap, time: new Date().toLocaleDateString() });
     localStorage.setItem('gGram_posts', JSON.stringify(savedPosts));
     renderFeed(); closeUpload();
 }
