@@ -1,122 +1,54 @@
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 body { background: #000; color: #fff; font-family: -apple-system, system-ui, sans-serif; overflow-x: hidden; }
 .app-wrapper { max-width: 500px; margin: 0 auto; padding-bottom: 80px; }
-.insta-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; position: sticky; top: 0; background: #000; z-index: 100; }
+
+/* Header & Nav */
+.insta-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; position: sticky; top: 0; background: #000; z-index: 100; border-bottom: 0.1px solid #262626; }
 .brand-logo { font-size: 24px; font-weight: 800; color: #D4AF37; }
-.header-right i { margin-left: 15px; cursor: pointer; }
-.story-container { display: flex; padding: 10px; gap: 12px; overflow-x: auto; border-bottom: 0.1px solid #262626; }
-.story-ring { min-width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7); padding: 2px; cursor: pointer; }
+.insta-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; display: flex; justify-content: space-around; background: #000; padding: 15px 0 25px; border-top: 0.1px solid #262626; z-index: 100; }
+
+/* Stories */
+.story-container { display: flex; padding: 15px 10px; gap: 15px; overflow-x: auto; scrollbar-width: none; }
+.story-container::-webkit-scrollbar { display: none; }
+.story-ring { min-width: 68px; height: 68px; border-radius: 50%; background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7); padding: 2px; cursor: pointer; }
 .story-inner { background: #000; height: 100%; width: 100%; border-radius: 50%; border: 2px solid #000; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-.post { border-bottom: 0.1px solid #262626; margin-bottom: 15px; }
+
+/* Posts */
+.post { border-bottom: 0.1px solid #262626; margin-bottom: 10px; }
 .post-header { padding: 10px 15px; font-weight: 600; font-size: 14px; }
-.img-box { position: relative; width: 100%; background: #121212; }
+.img-box { position: relative; width: 100%; background: #121212; cursor: pointer; }
 .post-img { width: 100%; display: block; }
 .action-bar { display: flex; gap: 18px; padding: 12px 15px; }
 .liked-red { color: #ed4956; fill: #ed4956; }
 .caption-area { padding: 0 15px 15px; font-size: 14px; }
-.insta-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; display: flex; justify-content: space-around; background: #000; padding: 15px 0 25px; border-top: 0.1px solid #262626; }
-.modal-overlay, .story-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: none; }
-.modal-content { height: 100%; display: flex; flex-direction: column; }
-.modal-header { display: flex; justify-content: space-between; padding: 15px; border-bottom: 0.1px solid #262626; align-items: center; }
-.share-btn { color: #0095f6; font-weight: 700; background: none; border: none; font-size: 16px; }
-.preview-box { width: 100%; aspect-ratio: 1/1; background: #121212; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.preview-box img { width: 100%; height: 100%; object-fit: cover; }
-#caption-input { width: 100%; height: 100px; background: #000; color: #fff; border: none; padding: 15px; font-size: 16px; outline: none; resize: none; }
-.chat-body { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-.msg { max-width: 80%; padding: 10px 15px; border-radius: 18px; font-size: 14px; }
-.msg.user { align-self: flex-end; background: #3797f0; }
-.msg.ai { align-self: flex-start; background: #262626; }
-.chat-input-area { display: flex; padding: 15px; background: #000; border-top: 0.1px solid #262626; }
-.chat-input-area input { flex: 1; background: #121212; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 20px; outline: none; }
-.chat-input-area button { background: none; border: none; color: #0095f6; font-weight: 700; margin-left: 10px; }
-.story-progress-container { width: 95%; height: 2px; background: #333; margin: 10px auto; }
-.story-progress-fill { height: 100%; width: 0%; background: #fff; }
-.story-content { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; text-align: center; }
-#story-text-container { background: #1e1e1e; padding: 20px; border-radius: 15px; width: 90%; }
-.close-story { background: none; border: none; color: #fff; font-size: 30px; }
-.chat-item { padding: 15px; border-bottom: 0.1px solid #262626; cursor: pointer; }
-/* Ensure the heart is centered and hidden by default */
-.heart-pop { 
-    position: absolute; 
-    top: 50%; 
-    left: 50%; 
-    transform: translate(-50%, -50%) scale(0); 
-    font-size: 80px; 
-    opacity: 0; 
-    pointer-events: none; 
-    z-index: 10;
-}
 
-/* The animation when you double tap */
+/* Animations */
+.heart-pop { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 80px; opacity: 0; pointer-events: none; }
 .pop-active { animation: instaHeart 0.8s ease-out; }
-
 @keyframes instaHeart {
     0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
     30% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
     100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
 }
 
-/* Fix for Story container spacing */
-.story-container { 
-    display: flex; 
-    padding: 15px 10px; 
-    gap: 15px; 
-    overflow-x: auto; 
-    scrollbar-width: none; /* Hides scrollbar on Firefox */
-}
-.story-container::-webkit-scrollbar { display: none; } /* Hides scrollbar on Chrome/Safari */
+/* Story Overlay - CENTERED CONTENT */
+.story-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 2000; display: none; flex-direction: column; }
+.story-progress-container { width: 95%; height: 2px; background: #333; margin: 10px auto; }
+.story-progress-fill { height: 100%; width: 0%; background: #fff; transition: width 0.05s linear; }
+.story-content { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; }
+#story-text-container { background: #1e1e1e; padding: 30px 20px; border-radius: 20px; width: 100%; max-width: 380px; text-align: center; border: 1px solid #333; }
+.story-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+#story-link { color: #0095f6; text-decoration: none; font-weight: bold; font-size: 14px; }
+.note-btn { background: #D4AF37; color: #000; border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-.story-ring { 
-    min-width: 68px; 
-    max-width: 68px; 
-    height: 68px; 
-}
-
-/* Ensure the story overlay fills the whole screen */
-.story-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: #000;
-    z-index: 3000; /* Highest priority */
-    display: none;
-    flex-direction: column;
-}
-
-/* Vertical and Horizontal centering for the content */
-.story-content {
-    flex: 1;
-    display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center;     /* Center vertically */
-    padding: 20px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* The actual card containing your CAT/Archi notes */
-#story-text-container {
-    background: #1e1e1e;
-    padding: 40px 20px;
-    border-radius: 24px;
-    border: 1px solid #333;
-    width: 100%;
-    max-width: 350px; /* Looks best on mobile */
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}
-
-#story-title {
-    color: #D4AF37; /* Gold for emphasis */
-    font-size: 26px;
-    margin-bottom: 20px;
-    font-weight: 800;
-}
-
-#story-detail {
-    font-size: 18px;
-    line-height: 1.5;
-    color: #efefef;
-}
+/* Modals & Chat */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 3000; display: none; }
+.modal-content { height: 100%; display: flex; flex-direction: column; }
+.modal-header { display: flex; justify-content: space-between; padding: 15px; border-bottom: 0.1px solid #262626; align-items: center; }
+#note-text { width: 100%; height: 250px; background: #121212; color: #fff; border: 1px solid #333; padding: 15px; border-radius: 10px; font-size: 16px; outline: none; }
+.chat-body { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.msg { max-width: 85%; padding: 12px 16px; border-radius: 20px; font-size: 14px; line-height: 1.4; }
+.msg.user { align-self: flex-end; background: #3797f0; }
+.msg.ai { align-self: flex-start; background: #262626; border: 0.1px solid #333; }
+.chat-input-area { display: flex; padding: 15px; border-top: 0.1px solid #262626; }
+.chat-input-area input { flex: 1; background: #121212; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 25px; outline: none; }
