@@ -35,7 +35,6 @@ function renderFeed() {
             <div class="post-header"><span class="username">${p.user}</span></div>
             <div class="img-box" ondblclick="doLike(this, ${i})">
                 <img src="${p.img}" class="post-img">
-                <div class="heart-pop">❤️</div>
             </div>
             <div class="action-bar">
                 <i data-lucide="heart" id="like-${i}" onclick="toggleLike(${i})"></i>
@@ -91,34 +90,16 @@ function previewImage(event) {
 function submitPost() {
     const imgUrl = document.getElementById('img-preview').src;
     const caption = document.getElementById('caption-input').value;
-    if (!imgUrl || imgUrl.includes('window.location.href')) return alert("Select a photo!");
+    if (!imgUrl || imgUrl === "" || imgUrl.includes('null')) return alert("Select a photo!");
 
     const now = new Date();
-    const timeString = now.toLocaleDateString('en-GB', { 
-        day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' 
-    });
+    const timeString = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
-    const newPost = { 
-        user: 'principal_srikanth', 
-        img: imgUrl, 
-        cap: caption || "Captured at Site",
-        time: timeString
-    };
-
-    savedPosts.unshift(newPost);
+    savedPosts.unshift({ user: 'principal_srikanth', img: imgUrl, cap: caption || "Captured at Site", time: timeString });
     localStorage.setItem('growthGramPosts', JSON.stringify(savedPosts));
     renderFeed();
     closeUpload();
     document.getElementById('cash-sound').play();
-}
-
-function doLike(container, id) {
-    const heart = container.querySelector('.heart-pop');
-    document.getElementById('cash-sound').play();
-    heart.classList.add('pop-active');
-    setTimeout(() => heart.classList.remove('pop-active'), 800);
-    document.getElementById(`like-${id}`).classList.add('liked-red');
-    lucide.createIcons();
 }
 
 function toggleLike(id) {
@@ -130,26 +111,16 @@ function openMessaging() { document.getElementById('messaging-screen').style.dis
 function closeMessaging() { document.getElementById('messaging-screen').style.display = 'none'; }
 
 let activeMentor = "";
-
-async function openChat(mentorName) {
-    activeMentor = mentorName;
-    document.getElementById('active-chat-name').innerText = mentorName;
+function openChat(name) {
+    activeMentor = name;
+    document.getElementById('active-chat-name').innerText = name;
     document.getElementById('chat-window').style.display = 'block';
     const chatBox = document.getElementById('chat-box');
-
-    if (mentorName === 'Archi-Intel') {
-        chatBox.innerHTML = `<div class="msg ai">Fetching latest Architecture updates for you, Srikanth...</div>`;
-        setTimeout(() => {
-            chatBox.innerHTML = `
-                <div class="msg ai">
-                    <b>Today's Design Headlines:</b><br><br>
-                    1. 🏗️ <b>Sustainability:</b> Circular economy in construction is the 2026 prize trend.<br>
-                    2. 🏙️ <b>Smart Glass:</b> New coatings block 90% of UV while staying clear.<br>
-                    3. 📐 <b>Revit:</b> Update 2026 includes AI-assisted layout generators.
-                </div>`;
-        }, 1500);
+    
+    if(name === 'Archi-Intel') {
+        chatBox.innerHTML = `<div class="msg ai"><b>Today's Brief:</b><br>1. Sustainability prizes are peaking.<br>2. Revit AI tools updated.</div>`;
     } else {
-        chatBox.innerHTML = `<div class="msg ai">Hello! I'm your ${mentorName} mentor. Ready to crush your goals?</div>`;
+        chatBox.innerHTML = `<div class="msg ai">Ready for a logic challenge, Srikanth?</div>`;
     }
 }
 
@@ -161,20 +132,18 @@ function sendMessage() {
     if (!input.value.trim()) return;
 
     chatBox.innerHTML += `<div class="msg user">${input.value}</div>`;
-    const userText = input.value;
-    input.value = ""; 
-
-    let response = "That is a strong insight. How can we apply this to your portfolio?";
+    let response = "That's a great observation for your portfolio.";
     
-    if (activeMentor === 'CAT-alyst') {
-        const logicQuestions = [
-            "Clock Math: What is the angle between the hands at 3:30? (Answer: 75°)",
-            "Logic: A is taller than B, B is taller than C. Is C taller than A? (Answer: No)",
-            "Syllogism: If all buildings need a base, and this structure is a building, does it need a base? (Answer: Yes)"
-        ];
-        const randomQ = logicQuestions[Math.floor(Math.random() * logicQuestions.length)];
-        response = `<b>Logic Challenge:</b> ${randomQ}`;
+    if(activeMentor === 'CAT-alyst') {
+        const qs = ["Clock Math: Angle at 3:30? (75°)", "Logic: Is C taller than A? (No)"];
+        response = `<b>Challenge:</b> ${qs[Math.floor(Math.random()*qs.length)]}`;
     }
 
     setTimeout(() => {
-        chat
+        chatBox.innerHTML += `<div class="msg ai">${response}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }, 800);
+    input.value = "";
+}
+
+window.onload = init;
