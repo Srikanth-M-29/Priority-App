@@ -1,58 +1,68 @@
-const feedData = [
-    { user: 'Principal Srikanth', img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab', caption: '🏢 Architectural Research: Modern glass facades can reduce lighting costs by 30%.' },
-    { user: 'Principal Srikanth', img: 'https://images.unsplash.com/photo-1509228468518-180dd48219d8', caption: '🧠 CAT Prep: Logical reasoning is just architecture for the mind. Solve this morning puzzle.' },
-    { user: 'Principal Srikanth', img: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8', caption: '📚 IELTS Prep: Use the word "Pragmatic" in your next client meeting. Level up your vocabulary.' }
+const posts = [
+    { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c', cap: 'Study Note: Modernist architecture is 90% logic, 10% art. #CAT2026' },
+    { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1507537297725-24a1c029d3ca', cap: 'Business: Closing the 50k project today. Discipline > Motivation.' }
 ];
 
-function loadApp() {
-    const feed = document.getElementById('main-feed');
-    const stories = document.getElementById('story-bar');
+function init() {
+    renderStories();
+    renderFeed();
+    lucide.createIcons(); // Turns <i data-lucide> into real icons
+}
 
-    // 1. Load Stories
-    const icons = ['💰', '📐', '📚', '📈', '🏢', '🏗️'];
-    stories.innerHTML = icons.map(icon => `
-        <div class="story-circle"><div class="story-inner">${icon}</div></div>
+function renderStories() {
+    const bar = document.getElementById('story-bar');
+    const items = ['💰', '📐', '📚', '🏛️', '📈'];
+    bar.innerHTML = items.map(icon => `
+        <div class="story-ring"><div class="story-inner">${icon}</div></div>
     `).join('');
+}
 
-    // 2. Load Feed (Doubled for scrolling)
-    const allPosts = [...feedData, ...feedData];
-    feed.innerHTML = allPosts.map(post => `
-        <article class="post-card">
-            <div class="post-user">${post.user}</div>
-            <div class="img-container" onclick="handleLike(this)">
-                <img src="${post.img}" class="post-img">
+function renderFeed() {
+    const feed = document.getElementById('main-feed');
+    feed.innerHTML = [...posts, ...posts].map((p, i) => `
+        <article class="post">
+            <div class="post-user-row">
+                <div class="user-avatar"></div>
+                <span class="username">${p.user}</span>
+            </div>
+            <div class="img-box" ondblclick="doLike(this, ${i})">
+                <img src="${p.img}" class="post-img">
                 <div class="heart-pop">❤️</div>
             </div>
-            <div class="post-info">
-                <div class="post-caption"><b>GrowthGram</b> ${post.caption}</div>
+            <div class="action-bar">
+                <i data-lucide="heart" id="like-${i}" onclick="toggleHeart(${i})"></i>
+                <i data-lucide="message-circle"></i>
+                <i data-lucide="send"></i>
+            </div>
+            <div class="caption-area">
+                <b>${p.user}</b> ${p.cap}
             </div>
         </article>
     `).join('');
+    lucide.createIcons();
 }
 
-// Double-Tap Detection Logic
-let lastClick = 0;
-function handleLike(container) {
-    const time = new Date().getTime();
-    if (time - lastClick < 300) {
-        showHeart(container);
-    }
-    lastClick = time;
-}
-
-function showHeart(container) {
+let lastTap = 0;
+function doLike(container, id) {
     const heart = container.querySelector('.heart-pop');
     const audio = document.getElementById('cash-sound');
-
-    // Play Reward Sound
-    if (audio) { audio.currentTime = 0; audio.play(); }
-
-    // Trigger Animation
-    heart.classList.remove('animate-heart');
-    void heart.offsetWidth; // Force CSS refresh
-    heart.classList.add('animate-heart');
-
-    console.log("Dopamine hit logged!");
+    
+    // Play Sound & Animate
+    audio.currentTime = 0; audio.play();
+    heart.classList.add('pop-active');
+    setTimeout(() => heart.classList.remove('pop-active'), 800);
+    
+    // Turn the small heart red
+    const heartIcon = document.getElementById(`like-${id}`);
+    heartIcon.classList.add('liked');
+    heartIcon.setAttribute('fill', '#ed4956');
 }
 
-window.addEventListener('DOMContentLoaded', loadApp);
+function toggleHeart(id) {
+    const icon = document.getElementById(`like-${id}`);
+    icon.classList.toggle('liked');
+    const isLiked = icon.classList.contains('liked');
+    icon.setAttribute('fill', isLiked ? '#ed4956' : 'none');
+}
+
+window.onload = init;
