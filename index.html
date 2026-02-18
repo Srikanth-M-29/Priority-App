@@ -13,7 +13,7 @@
             <h1 class="brand-logo">GrowthGram</h1>
             <div class="header-right">
                 <i data-lucide="heart"></i>
-               <i data-lucide="message-circle" onclick="openMessaging()"></i>
+                <i data-lucide="message-circle" onclick="openMessaging()"></i>
             </div>
         </header>
 
@@ -21,7 +21,7 @@
         <main id="main-feed"></main>
 
         <nav class="insta-nav">
-            <i data-lucide="home" class="nav-active"></i>
+            <i data-lucide="home"></i>
             <i data-lucide="search"></i>
             <i data-lucide="plus-square" onclick="openUpload()"></i> 
             <i data-lucide="clapperboard"></i>
@@ -39,10 +39,7 @@
             <div class="modal-body">
                 <div class="preview-box" onclick="document.getElementById('file-input').click()">
                     <img id="img-preview" src="" style="display:none;">
-                    <div id="upload-placeholder">
-                        <i data-lucide="image"></i>
-                        <p>Tap to select site photo</p>
-                    </div>
+                    <div id="upload-placeholder"><i data-lucide="image"></i><p>Tap to select site photo</p></div>
                 </div>
                 <textarea id="caption-input" placeholder="Write a design note..."></textarea>
                 <input type="file" id="file-input" accept="image/*" style="display:none" onchange="previewImage(event)">
@@ -51,64 +48,39 @@
     </div>
 
     <div id="story-viewer" class="story-overlay">
-        <div class="story-progress-container">
-            <div id="story-progress-bar" class="story-progress-fill"></div>
-        </div>
+        <div class="story-progress-container"><div id="story-progress-bar" class="story-progress-fill"></div></div>
         <div class="story-header">
-            <div class="story-user-info">
-                <div class="mini-avatar"></div>
-                <span id="story-category-name">Category</span>
-            </div>
+            <span id="story-category-name">Insights</span>
             <button class="close-story" onclick="closeStory()">×</button>
         </div>
         <div class="story-content">
             <div id="story-text-container">
-                <h2 id="story-title">Formula</h2>
-                <p id="story-detail">Description goes here...</p>
+                <h2 id="story-title"></h2>
+                <p id="story-detail"></p>
             </div>
         </div>
     </div>
 
     <div id="messaging-screen" class="modal-overlay">
-    <div class="modal-content">
-        <header class="modal-header">
-            <button onclick="closeMessaging()">Back</button>
-            <h3>Messages</h3>
-            <div></div>
-        </header>
-        <div class="inbox-list">
-            <div class="chat-item" onclick="openChat('Archi-Intel')">
-                <div class="mini-avatar mentor-archi">🏛️</div>
-                <div class="chat-info">
-                    <h4>Archi-Intel</h4>
-                    <p>Current architecture news & prize tips.</p>
-                </div>
-            </div>
-            <div class="chat-item" onclick="openChat('CAT-alyst')">
-                <div class="mini-avatar mentor-cat">📐</div>
-                <div class="chat-info">
-                    <h4>CAT-alyst</h4>
-                    <p>Ready for today's logic puzzle?</p>
-                </div>
+        <div class="modal-content">
+            <header class="modal-header"><button onclick="closeMessaging()">Back</button><h3>Messages</h3><div></div></header>
+            <div class="inbox-list">
+                <div class="chat-item" onclick="openChat('Archi-Intel')">🏛️ Archi-Intel</div>
+                <div class="chat-item" onclick="openChat('CAT-alyst')">📐 CAT-alyst</div>
             </div>
         </div>
     </div>
-</div>
 
-<div id="chat-window" class="modal-overlay">
-    <div class="modal-content">
-        <header class="modal-header">
-            <button onclick="closeChat()">Back</button>
-            <h3 id="active-chat-name">AI Mentor</h3>
-            <div></div>
-        </header>
-        <div id="chat-box" class="chat-body"></div>
-        <div class="chat-input-area">
-            <input type="text" id="user-msg" placeholder="Ask your mentor...">
-            <button onclick="sendMessage()">Send</button>
+    <div id="chat-window" class="modal-overlay">
+        <div class="modal-content">
+            <header class="modal-header"><button onclick="closeChat()">Back</button><h3 id="active-chat-name"></h3><div></div></header>
+            <div id="chat-box" class="chat-body"></div>
+            <div class="chat-input-area">
+                <input type="text" id="user-msg" placeholder="Ask mentor...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
         </div>
     </div>
-</div>
 
     <audio id="cash-sound" src="https://assets.mixkit.co/active_storage/sfx/2004/2004-preview.mp3"></audio>
     <script src="app.js"></script>
