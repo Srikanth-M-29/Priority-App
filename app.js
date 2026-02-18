@@ -132,14 +132,29 @@ function closeMessaging() { document.getElementById('messaging-screen').style.di
 
 let activeMentor = "";
 
-function openChat(mentorName) {
+async function openChat(mentorName) {
     activeMentor = mentorName;
     document.getElementById('active-chat-name').innerText = mentorName;
     document.getElementById('chat-window').style.display = 'block';
-    
-    // Initial Greeting
     const chatBox = document.getElementById('chat-box');
-    chatBox.innerHTML = `<div class="msg ai">Hello Srikanth! I am your ${mentorName} assistant. How can I help you progress today?</div>`;
+
+    if (mentorName === 'Archi-Intel') {
+        chatBox.innerHTML = `<div class="msg ai">Fetching latest Architecture updates for you, Srikanth...</div>`;
+        
+        // Simulating an API call to a news service
+        setTimeout(() => {
+            chatBox.innerHTML = `
+                <div class="msg ai">
+                    <b>Today's Design Headlines:</b><br><br>
+                    1. 🏗️ <b>Pritzker Prize Trends:</b> Sustainability is no longer optional; it's the core.<br>
+                    2. 🏙️ <b>Smart Cities:</b> New glass tech reduces solar heat gain by 40%.<br>
+                    3. 📐 <b>Career:</b> Top firms are looking for Revit + AI workflow expertise.
+                </div>`;
+        }, 1500);
+    } else {
+        chatBox.innerHTML = `<div class="msg ai">Hello! I'm your ${mentorName} mentor. Ready to crush your CAT goals?</div>`;
+    }
+}
 }
 
 function closeChat() { document.getElementById('chat-window').style.display = 'none'; }
