@@ -168,6 +168,7 @@ function openChat(name) {
 
 function closeChat() { document.getElementById('chat-window').style.display = 'none'; }
 
+// --- UPGRADED MENTOR LOGIC ---
 function sendMessage() {
     const input = document.getElementById('user-msg');
     const box = document.getElementById('chat-box');
@@ -175,17 +176,53 @@ function sendMessage() {
     if(!text) return;
 
     box.innerHTML += `<div class="msg user">${text}</div>`;
-    let response = "Interesting. How does this help your Pritzker-level portfolio?";
+    let response = "";
 
-    if(text.toLowerCase().includes('revise') || text.toLowerCase().includes('note')) {
-        if(studyNotes.length > 0) {
-            const last = studyNotes[studyNotes.length - 1];
-            response = `I see your note on <b>${last.context}</b>. You noted: "${last.content}". Let's test your memory on this tomorrow!`;
+    // Mentorship Logic for Archi-Intel
+    if (activeMentor === 'Archi-Intel') {
+        if (text.toLowerCase().includes('revise') || text.toLowerCase().includes('note')) {
+            response = analyzeArchiNotes();
+        } else if (text.toLowerCase().includes('portfolio') || text.toLowerCase().includes('career')) {
+            response = "For a Pritzker-track portfolio, don't just show the building. Show the *problem* you solved. Are your recent site visits focusing on social impact or just aesthetics?";
         } else {
-            response = "You haven't saved any notes yet! Tap '+ Take Note' in a story first.";
+            response = "Interesting point. From an architectural standpoint, how does this affect the 'human flow' of the space? Remember: Form follows function, but function follows human behavior.";
+        }
+    } 
+
+    // Mentorship Logic for CAT-alyst
+    else if (activeMentor === 'CAT-alyst') {
+        if (text.toLowerCase().includes('revise')) {
+            response = analyzeCATNotes();
+        } else {
+            const puzzles = [
+                "Logic check: If you're designing a 10-story building and the elevator takes 15s per floor, how long to reach the top from the 1st? (Mental math is key for CAT!)",
+                "Verbal Ability: Define 'Ephemeral' in an architectural context. (Answer: Lasting for a very short time—like a pavilion)."
+            ];
+            response = puzzles[Math.floor(Math.random() * puzzles.length)];
         }
     }
 
+    setTimeout(() => { 
+        box.innerHTML += `<div class="msg ai">${response}</div>`; 
+        box.scrollTop = box.scrollHeight; 
+    }, 600);
+    input.value = "";
+}
+
+// AI Analysis of your specific Architectural reflections
+function analyzeArchiNotes() {
+    if (studyNotes.length === 0) return "I don't see any design reflections yet. Go to your stories, read an article, and 'Take Note'. Then I can analyze your thinking.";
+    
+    const latest = studyNotes[studyNotes.length - 1];
+    return `I've analyzed your note on <b>${latest.context}</b>. You mentioned: "${latest.content}". <br><br><b>Mentor Advice:</b> Connect this to your site work. If you're studying glass facades, look at the curing concrete today—is the thermal mass sufficient for that much glass?`;
+}
+
+function analyzeCATNotes() {
+    // Logic to pull only CAT-related notes
+    const catNotes = studyNotes.filter(n => n.context.includes('CAT'));
+    if (catNotes.length === 0) return "No CAT notes found. Start taking notes on formulas to build your logic database.";
+    return "Your logic patterns are improving. Focus more on the 'Syllogism' notes you took—that's a high-weightage area.";
+}
     setTimeout(() => { box.innerHTML += `<div class="msg ai">${response}</div>`; box.scrollTop = box.scrollHeight; }, 600);
     input.value = "";
 }
