@@ -42,7 +42,10 @@ function renderFeed() {
                 <i data-lucide="message-circle"></i>
                 <i data-lucide="send"></i>
             </div>
-            <div class="caption-area"><b>${p.user}</b> ${p.cap}</div>
+<div class="caption-area">
+    <b>${p.user}</b> ${p.cap}
+    <div style="font-size: 10px; color: #8e8e8e; margin-top: 5px;">${p.time || 'Earlier Today'}</div>
+</div>
         </article>
     `).join('');
     lucide.createIcons();
