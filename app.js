@@ -198,16 +198,25 @@ function openMessaging() { document.getElementById('messaging-screen').style.dis
 function closeMessaging() { document.getElementById('messaging-screen').style.display = 'none'; }
 
 let activeMentor = "";
-function openChat(name) {
-    activeMentor = name;
-    document.getElementById('active-chat-name').innerText = name;
+async function openChat(mentorName) {
+    activeMentor = mentorName;
+    document.getElementById('active-chat-name').innerText = mentorName;
     document.getElementById('chat-window').style.display = 'block';
     const chatBox = document.getElementById('chat-box');
-    
-    if(name === 'Archi-Intel') {
-        chatBox.innerHTML = `<div class="msg ai"><b>Today's Brief:</b><br>1. Sustainability prizes are peaking.<br>2. Revit AI tools updated.</div>`;
+
+    if (mentorName === 'Archi-Intel') {
+        chatBox.innerHTML = `<div class="msg ai">Checking ArchDaily and Dezeen for you...</div>`;
+        
+        setTimeout(() => {
+            let newsHtml = `<b>Latest from ArchDaily:</b><br><br>`;
+            // Take the top 3 news items
+            liveArchiNews.slice(0, 3).forEach((item, index) => {
+                newsHtml += `${index + 1}. <a href="${item.link}" target="_blank" style="color:#D4AF37; text-decoration:none;">${item.title}</a><br><br>`;
+            });
+            chatBox.innerHTML = `<div class="msg ai">${newsHtml}</div>`;
+        }, 1000);
     } else {
-        chatBox.innerHTML = `<div class="msg ai">Ready for a logic challenge, Srikanth?</div>`;
+        chatBox.innerHTML = `<div class="msg ai">Hello Srikanth! Ready for a CAT Logic session?</div>`;
     }
 }
 
