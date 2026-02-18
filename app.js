@@ -89,7 +89,21 @@ function submitPost() {
     const imgUrl = document.getElementById('img-preview').src;
     const caption = document.getElementById('caption-input').value;
     if (!imgUrl || imgUrl.includes('window.location.href')) return alert("Select a photo!");
-    savedPosts.unshift({ user: 'principal_srikanth', img: imgUrl, cap: caption || "Captured at Site" });
+
+    // Capture the current date and time
+    const now = new Date();
+    const timeString = now.toLocaleDateString('en-GB', { 
+        day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' 
+    });
+
+    const newPost = { 
+        user: 'principal_srikanth', 
+        img: imgUrl, 
+        cap: caption || "Captured at Site",
+        time: timeString // Store the timestamp
+    };
+
+    savedPosts.unshift(newPost);
     localStorage.setItem('growthGramPosts', JSON.stringify(savedPosts));
     renderFeed();
     closeUpload();
