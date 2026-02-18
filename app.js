@@ -4,12 +4,30 @@ let savedPosts = JSON.parse(localStorage.getItem('growthGramPosts')) || [
 ];
 
 const storyData = {
-    '💰': { title: 'Revenue Goal', detail: 'Target: $50k Milestone for Q1. Current: Design Phase approval pending.' },
-    '📐': { title: 'Design Flow', detail: 'Form follows function. Focus on the spatial logic of the lobby today.' },
-    '📚': { title: 'CAT Formula', detail: 'Logarithms: log(ab) = log a + log b. Simplify to solve faster.' },
-    '🏛️': { title: 'IELTS Word', detail: '"Pragmatic": Dealing with things sensibly and realistically based on practical conditions.' },
-    '📈': { title: 'Growth Insight', detail: 'Architecture prizes are won by those who solve social problems, not just aesthetic ones.' },
-    '🏗️': { title: 'Site Priority', detail: 'Concrete curing check at Sector 7. Ensure temperature control is active.' }
+    '💰': { 
+        title: 'Revenue Goal', 
+        detail: 'Target: $50k Milestone for Q1. Current: Design Phase approval pending.',
+        img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=500',
+        link: 'https://www.archdaily.com/search/projects/categories/office-buildings'
+    },
+    '📐': { 
+        title: 'Design Flow', 
+        detail: 'Form follows function. Focus on the spatial logic of the lobby today.',
+        img: 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=500',
+        link: 'https://www.architecture.com/knowledge-and-resources/knowledge-landing-page'
+    },
+    '📚': { 
+        title: 'CAT Formula', 
+        detail: 'Logarithms: log(ab) = log a + log b. Simplify to solve faster.',
+        img: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=500',
+        link: 'https://iim-cat.com/syllabus'
+    },
+    '🏛️': { 
+        title: 'IELTS Word', 
+        detail: '"Pragmatic": Dealing with things sensibly and realistically.',
+        img: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=500',
+        link: 'https://www.ielts.org/for-test-takers/sample-test-questions'
+    }
 };
 
 function init() {
