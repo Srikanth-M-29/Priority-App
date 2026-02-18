@@ -71,3 +71,52 @@ body { background: #000; color: #fff; font-family: -apple-system, system-ui, san
     max-width: 68px; 
     height: 68px; 
 }
+
+/* Ensure the story overlay fills the whole screen */
+.story-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    z-index: 3000; /* Highest priority */
+    display: none;
+    flex-direction: column;
+}
+
+/* Vertical and Horizontal centering for the content */
+.story-content {
+    flex: 1;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;     /* Center vertically */
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* The actual card containing your CAT/Archi notes */
+#story-text-container {
+    background: #1e1e1e;
+    padding: 40px 20px;
+    border-radius: 24px;
+    border: 1px solid #333;
+    width: 100%;
+    max-width: 350px; /* Looks best on mobile */
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+#story-title {
+    color: #D4AF37; /* Gold for emphasis */
+    font-size: 26px;
+    margin-bottom: 20px;
+    font-weight: 800;
+}
+
+#story-detail {
+    font-size: 18px;
+    line-height: 1.5;
+    color: #efefef;
+}
