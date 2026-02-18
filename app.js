@@ -35,6 +35,7 @@ function renderFeed() {
             <div class="post-header"><span class="username">${p.user}</span></div>
             <div class="img-box" ondblclick="doLike(this, ${i})">
                 <img src="${p.img}" class="post-img">
+                <div class="heart-pop">❤️</div>
             </div>
             <div class="action-bar">
                 <i data-lucide="heart" id="like-${i}" onclick="toggleLike(${i})"></i>
@@ -47,6 +48,21 @@ function renderFeed() {
             </div>
         </article>
     `).join('');
+    lucide.createIcons();
+}
+
+// Add this specific function to handle the animation
+function doLike(container, id) {
+    const heart = container.querySelector('.heart-pop');
+    document.getElementById('cash-sound').play();
+    heart.classList.add('pop-active');
+    
+    // Remove the heart after animation finishes
+    setTimeout(() => heart.classList.remove('pop-active'), 800);
+    
+    // Turn the bottom heart icon red
+    const icon = document.getElementById(`like-${id}`);
+    icon.classList.add('liked-red');
     lucide.createIcons();
 }
 
