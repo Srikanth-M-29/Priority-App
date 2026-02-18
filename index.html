@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GrowthGram</title>
+    <title>GrowthGram | Srikanth</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -55,17 +55,34 @@
         </div>
         <div class="story-content">
             <div id="story-text-container">
-    <img id="story-img" src="" style="width: 100%; border-radius: 10px; margin-bottom: 15px; display: none;">
-    <h2 id="story-title"></h2>
-    <p id="story-detail"></p>
-    <a id="story-link" href="#" target="_blank" style="display:inline-block; margin-top:15px; color:#0095f6; text-decoration:none; font-weight:bold; font-size:14px;">Learn More →</a>
-</div>
+                <img id="story-img" src="" style="width: 100%; border-radius: 10px; margin-bottom: 15px; display: none;">
+                <h2 id="story-title"></h2>
+                <p id="story-detail"></p>
+                <div class="story-actions">
+                    <a id="story-link" href="#" target="_blank">Read Article →</a>
+                    <button class="note-btn" onclick="openNote()">+ Take Note</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="note-modal" class="modal-overlay">
+        <div class="modal-content">
+            <header class="modal-header">
+                <button onclick="closeNote()">Cancel</button>
+                <h3>Analysis Note</h3>
+                <button class="share-btn" onclick="saveNote()">Save</button>
+            </header>
+            <div class="modal-body" style="padding: 20px;">
+                <h4 id="note-context" style="color: #D4AF37; margin-bottom: 10px;"></h4>
+                <textarea id="note-text" placeholder="Write your reflections here for the AI Mentor to analyze..."></textarea>
+            </div>
         </div>
     </div>
 
     <div id="messaging-screen" class="modal-overlay">
         <div class="modal-content">
-            <header class="modal-header"><button onclick="closeMessaging()">Back</button><h3>Messages</h3><div></div></header>
+            <header class="modal-header"><button onclick="closeMessaging()">Back</button><h3>Mentors</h3><div></div></header>
             <div class="inbox-list">
                 <div class="chat-item" onclick="openChat('Archi-Intel')">🏛️ Archi-Intel</div>
                 <div class="chat-item" onclick="openChat('CAT-alyst')">📐 CAT-alyst</div>
@@ -78,26 +95,12 @@
             <header class="modal-header"><button onclick="closeChat()">Back</button><h3 id="active-chat-name"></h3><div></div></header>
             <div id="chat-box" class="chat-body"></div>
             <div class="chat-input-area">
-                <input type="text" id="user-msg" placeholder="Ask mentor...">
+                <input type="text" id="user-msg" placeholder="Ask mentor to revise notes...">
                 <button onclick="sendMessage()">Send</button>
             </div>
         </div>
     </div>
 
-    <div id="note-modal" class="modal-overlay">
-    <div class="modal-content">
-        <header class="modal-header">
-            <button onclick="closeNote()">Cancel</button>
-            <h3>Study Note</h3>
-            <button class="share-btn" onclick="saveNote()">Save</button>
-        </header>
-        <div class="modal-body" style="padding: 20px;">
-            <h4 id="note-context" style="color: #D4AF37; margin-bottom: 10px;">Context</h4>
-            <textarea id="note-text" placeholder="What did you learn from this article? AI Mentor will analyze this..." 
-                      style="width: 100%; height: 200px; background: #121212; color: #fff; border: 1px solid #333; padding: 15px; border-radius: 10px;"></textarea>
-        </div>
-    </div>
-</div>
     <audio id="cash-sound" src="https://assets.mixkit.co/active_storage/sfx/2004/2004-preview.mp3"></audio>
     <script src="app.js"></script>
 </body>
