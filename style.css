@@ -35,3 +35,39 @@ body { background: #000; color: #fff; font-family: -apple-system, system-ui, san
 #story-text-container { background: #1e1e1e; padding: 20px; border-radius: 15px; width: 90%; }
 .close-story { background: none; border: none; color: #fff; font-size: 30px; }
 .chat-item { padding: 15px; border-bottom: 0.1px solid #262626; cursor: pointer; }
+/* Ensure the heart is centered and hidden by default */
+.heart-pop { 
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%) scale(0); 
+    font-size: 80px; 
+    opacity: 0; 
+    pointer-events: none; 
+    z-index: 10;
+}
+
+/* The animation when you double tap */
+.pop-active { animation: instaHeart 0.8s ease-out; }
+
+@keyframes instaHeart {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    30% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+
+/* Fix for Story container spacing */
+.story-container { 
+    display: flex; 
+    padding: 15px 10px; 
+    gap: 15px; 
+    overflow-x: auto; 
+    scrollbar-width: none; /* Hides scrollbar on Firefox */
+}
+.story-container::-webkit-scrollbar { display: none; } /* Hides scrollbar on Chrome/Safari */
+
+.story-ring { 
+    min-width: 68px; 
+    max-width: 68px; 
+    height: 68px; 
+}
