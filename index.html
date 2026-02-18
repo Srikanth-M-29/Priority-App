@@ -1,80 +1,58 @@
-// 1. Load saved posts from memory or use defaults if empty
-let savedPosts = JSON.parse(localStorage.getItem('growthGramPosts')) || [
-    { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c', cap: 'Architecture: Modernist glass facades increase property value by 20%.' },
-    { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1507537297725-24a1c029d3ca', cap: 'Study Note: Logic is the foundation of design. #CAT2026' }
-];
-
-function init() {
-    renderStories();
-    renderFeed();
-    lucide.createIcons();
-}
-
-function renderStories() {
-    const bar = document.getElementById('story-bar');
-    const items = ['💰', '📐', '📚', '🏛️', '📈', '🏗️'];
-    bar.innerHTML = items.map(icon => `
-        <div class="story-ring"><div class="story-inner">${icon}</div></div>
-    `).join('');
-}
-
-function renderFeed() {
-    const feed = document.getElementById('main-feed');
-    // We use savedPosts here so it shows your uploaded content
-    feed.innerHTML = savedPosts.map((p, i) => `
-        <article class="post">
-            <div class="post-header">
-                <div class="mini-avatar"></div>
-                <span class="username">${p.user}</span>
-            </div>
-            <div class="img-box" ondblclick="doLike(this, ${i})">
-                <img src="${p.img}" class="post-img">
-                <div class="heart-pop">❤️</div>
-            </div>
-            <div class="action-bar">
-                <i data-lucide="heart" id="like-${i}" onclick="toggleLike(${i})"></i>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>GrowthGram | Principal Srikanth</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-wrapper">
+        <header class="insta-header">
+            <h1 class="brand-logo">GrowthGram</h1>
+            <div class="header-right">
+                <i data-lucide="heart"></i>
                 <i data-lucide="message-circle"></i>
-                <i data-lucide="send"></i>
             </div>
-            <div class="caption-area">
-                <b>${p.user}</b> ${p.cap}
+        </header>
+
+        <div id="story-bar" class="story-container"></div>
+
+        <main id="main-feed"></main>
+
+        <nav class="insta-nav">
+            <i data-lucide="home" class="nav-active"></i>
+            <i data-lucide="search"></i>
+            <i data-lucide="plus-square" onclick="openUpload()"></i> 
+            <i data-lucide="clapperboard"></i>
+            <i data-lucide="circle-user"></i>
+        </nav>
+    </div>
+
+    <div id="upload-modal" class="modal-overlay">
+        <div class="modal-content">
+            <header class="modal-header">
+                <button onclick="closeUpload()">Cancel</button>
+                <h3>New Post</h3>
+                <button class="share-btn" onclick="submitPost()">Share</button>
+            </header>
+            <div class="modal-body">
+                <div class="preview-box" onclick="document.getElementById('file-input').click()">
+                    <img id="img-preview" src="" style="display:none;">
+                    <div id="upload-placeholder">
+                        <i data-lucide="image"></i>
+                        <p>Tap to select site photo</p>
+                    </div>
+                </div>
+                <textarea id="caption-input" placeholder="Write a design note or revenue log..."></textarea>
+                <input type="file" id="file-input" accept="image/*" style="display:none" onchange="previewImage(event)">
             </div>
-        </article>
-    `).join('');
-    lucide.createIcons();
-}
+        </div>
+    </div>
 
-function submitPost() {
-    const imgUrl = document.getElementById('img-preview').src;
-    const caption = document.getElementById('caption-input').value;
+    <audio id="cash-sound" src="https://assets.mixkit.co/active_storage/sfx/2004/2004-preview.mp3"></audio>
 
-    if (!imgUrl || imgUrl.includes('window.location.href')) {
-        alert("Please select a photo first!");
-        return;
-    }
-
-    const newPost = {
-        user: 'principal_srikanth',
-        img: imgUrl,
-        cap: caption || "Captured at Site"
-    };
-
-    // Add to the list
-    savedPosts.unshift(newPost); 
-    
-    // SAVE TO MEMORY
-    localStorage.setItem('growthGramPosts', JSON.stringify(savedPosts));
-
-    renderFeed();
-    closeUpload();
-    document.getElementById('cash-sound').play();
-    
-    // Clear the modal for next time
-    document.getElementById('img-preview').src = "";
-    document.getElementById('caption-input').value = "";
-}
-
-// ... rest of your functions (doLike, toggleLike, openUpload, closeUpload, previewImage) ...
-// (Make sure to keep those functions in your file!)
-
-window.onload = init;
+    <script src="app.js"></script>
+</body>
+</html>
