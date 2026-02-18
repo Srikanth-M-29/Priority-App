@@ -1,7 +1,7 @@
 // 1. DATA PERSISTENCE - Load from memory or use defaults
 let savedPosts = JSON.parse(localStorage.getItem('growthGramPosts')) || [
     { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c', cap: 'Architecture: Modernist glass facades increase property value by 20%.' },
-    { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1507537297725-24a1c029d3ca', cap: 'Study Note: Logic is the foundation of design. #CAT2026' }
+    { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1509228468518-180dd48219d8', cap: 'Study Note: Logic is the foundation of design. #CAT2026' }
 ];
 
 function init() {
