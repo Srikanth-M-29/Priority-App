@@ -1,37 +1,22 @@
-:root {
-    --bg: #0f0f0f;
-    --card: #1a1a1a;
-    --accent: #d4af37;
-    --success: #27ae60;
-    --text: #ffffff;
-}
-
-body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
+:root { --bg: #0f0f0f; --card: #1a1a1a; --accent: #d4af37; --success: #27ae60; --text: #ffffff; }
+body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
 .app-wrapper { max-width: 500px; margin: 0 auto; padding-bottom: 100px; }
-
 .hero-section { height: 35vh; background: #333 url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1000') center/cover; position: relative; }
 .overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; background: linear-gradient(transparent, var(--bg)); }
-
-.stat-card { background: var(--card); margin: 15px; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+.stat-card { background: var(--card); margin: 15px; padding: 20px; border-radius: 15px; border: 1px solid #333; }
 .stat-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
-
 .progress-container { background: #333; height: 10px; border-radius: 5px; overflow: hidden; }
 .progress-fill { background: var(--accent); width: 0%; height: 100%; transition: width 0.5s ease; }
-
 .quick-money { display: flex; gap: 8px; margin-top: 15px; }
 .quick-money button { flex: 1; background: #222; border: 1px solid var(--accent); color: var(--accent); padding: 8px; border-radius: 5px; font-weight: bold; }
-
 .contract-section { padding: 0 15px; margin-top: 20px; }
 .task-row { display: flex; flex-direction: column; gap: 10px; }
-.task-btn { background: #222; color: white; border: 1px solid #444; padding: 15px; border-radius: 10px; text-align: left; font-size: 15px; cursor: pointer; }
+.task-btn { background: #222; color: white; border: 1px solid #444; padding: 18px; border-radius: 10px; text-align: left; font-size: 15px; }
 .task-btn.completed { background: var(--success); border-color: var(--success); }
-
 .seal-btn { width: 100%; margin-top: 20px; padding: 15px; border-radius: 10px; border: none; background: var(--accent); color: black; font-weight: bold; font-size: 16px; }
-
 .history-section { padding: 20px; }
 .history-card { background: #1a1a1a; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #444; }
 .history-card.perfect { border-left-color: var(--success); }
-
 .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #111; display: flex; justify-content: space-around; padding: 15px 0 30px; border-top: 1px solid #333; }
 .nav-item { background: none; border: none; font-size: 20px; opacity: 0.5; }
 .nav-item.active { opacity: 1; }
