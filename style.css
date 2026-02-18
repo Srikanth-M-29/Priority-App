@@ -1,96 +1,71 @@
-:root {
-    --bg-black: #000000;
-    --card-grey: #121212;
-    --insta-gold: #D4AF37;
-    --text-white: #ffffff;
+const contentVault = [
+    { type: 'arch', img: 'https://images.unsplash.com/photo-1511818966892-d7d671e672a2', caption: '💡 Pritzker Insight: Minimalist glass structures increase property value by 20%.' },
+    { type: 'cat', img: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb', caption: '🧠 Logic Pulse: If 5 architects design 5 firms in 5 days, how long for 100 architects?' },
+    { type: 'news', img: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e', caption: '📊 Market News: Real estate prices in India expected to surge. #Business' }
+];
+
+function init() {
+    console.log("App Initializing...");
+    renderStories();
+    renderFeed();
 }
 
-body { 
-    background-color: var(--bg-black); 
-    color: var(--text-white); 
-    font-family: -apple-system, sans-serif;
-    margin: 0; padding: 0;
+function renderStories() {
+    const bar = document.getElementById('story-bar');
+    if (!bar) return; // Safety check
+    const icons = ['📐', '📚', '💰', '📉', '🏛️'];
+    bar.innerHTML = icons.map(icon => `
+        <div class="story-circle">
+            <div class="story-inner">${icon}</div>
+        </div>
+    `).join('');
 }
 
-/* Story Bar Styling */
-.story-container {
-    display: flex;
-    padding: 10px;
-    gap: 15px;
-    overflow-x: auto;
-    border-bottom: 0.5px solid #333;
+function renderFeed() {
+    const feed = document.getElementById('main-feed');
+    if (!feed) {
+        console.error("Could not find main-feed ID in HTML!");
+        return;
+    }
+
+    const posts = [...contentVault, ...contentVault]; // Double the content
+    
+    feed.innerHTML = posts.map(post => `
+        <article class="post-card">
+            <div class="post-header"><b>Principal Srikanth</b></div>
+            <div class="heart-container" ondblclick="triggerDopamine(this)">
+                <img class="post-img" src="${post.img}" alt="post">
+            </div>
+            <div class="post-actions">
+                <span class="like-btn" onclick="toggleLike(this)">🤍</span> <span>💬</span> <span>🔖</span>
+            </div>
+            <div class="post-caption"><b>GrowthGram</b> ${post.caption}</div>
+        </article>
+    `).join('');
 }
 
-.story-circle {
-    min-width: 65px; height: 65px;
-    border-radius: 50%;
-    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-    padding: 3px;
-    position: relative;
+function triggerDopamine(container) {
+    // Sound
+    const sound = document.getElementById('sound-money');
+    if (sound) { sound.currentTime = 0; sound.play(); }
+
+    // Heart Pop
+    const heart = document.createElement('div');
+    heart.innerHTML = '❤️';
+    heart.className = 'heart-pop';
+    container.appendChild(heart);
+    
+    // Toggle Like Icon
+    const likeBtn = container.closest('.post-card').querySelector('.like-btn');
+    if (likeBtn) likeBtn.innerText = '❤️';
+
+    setTimeout(() => heart.remove(), 800);
 }
 
-.story-inner {
-    width: 100%; height: 100%;
-    background: #000;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px;
+function toggleLike(btn) {
+    btn.innerText = (btn.innerText === '🤍') ? '❤️' : '🤍';
 }
 
-/* Feed Styling */
-.post-card {
-    margin-bottom: 20px;
-    border-bottom: 0.5px solid #222;
-}
-
-.post-header { padding: 10px; display: flex; align-items: center; gap: 10px; }
-.post-img { width: 100%; aspect-ratio: 4/5; object-fit: cover; background: #222; }
-.post-actions { padding: 10px; display: flex; gap: 15px; font-size: 20px; }
-.post-caption { padding: 0 10px 15px; font-size: 14px; line-height: 1.4; }
-
-/* Bottom Nav */
-.bottom-nav {
-    position: fixed; bottom: 0; width: 100%;
-    background: #000; display: flex; justify-content: space-around;
-    padding: 15px 0 30px; border-top: 0.5px solid #333;
-}
-.nav-btn { background: none; border: none; font-size: 22px; color: white; opacity: 0.6; }
-.nav-btn.active { opacity: 1; color: var(--insta-gold); }
-
-/* The Dopamine Heart Animation */
-.heart-container {
-    position: relative; /* This is the "anchor" for the heart */
-    width: 100%;
-    display: block;
-    cursor: pointer;
-}
-
-.heart-pop {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    font-size: 80px;
-    color: white;
-    text-shadow: 0 0 20px rgba(0,0,0,0.5);
-    pointer-events: none;
-    z-index: 10;
-    animation: heartAnim 0.8s cubic-bezier(0.17, 0.89, 0.32, 1.49);
-}
-
-@keyframes heartAnim {
-    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.9; }
-    100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
-}
-
-/* Make the image flash slightly on like */
-.liked-flash {
-    animation: flash 0.3s;
-}
-
-@keyframes flash {
-    0% { filter: brightness(1); }
-    50% { filter: brightness(1.3); }
-    100% { filter: brightness(1); }
-}
+// THIS IS THE MOST IMPORTANT PART:
+// It waits for the whole page to load before running the JS.
+window.addEventListener('DOMContentLoaded', init);
