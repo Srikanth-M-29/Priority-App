@@ -94,16 +94,23 @@ let sTimer;
 function openStory(icon) {
     const data = stories[icon];
     const viewer = document.getElementById('story-viewer');
+    
+    document.getElementById('story-category-name').innerText = data.title;
     document.getElementById('story-title').innerText = data.title;
     document.getElementById('story-detail').innerText = data.detail;
-    document.getElementById('story-img').src = data.img;
-    document.getElementById('story-img').style.display = 'block';
-    viewer.style.display = 'flex';
+    
+    // Set Full Screen Background
+    const bg = document.getElementById('story-bg-image');
+    bg.style.backgroundImage = `url('${data.img}')`;
+    
+    document.getElementById('story-link').href = data.link;
+    viewer.style.display = 'block';
+
     let w = 0; clearInterval(sTimer);
     sTimer = setInterval(() => {
         if(w >= 100) closeStory();
         else { w++; document.getElementById('story-progress-bar').style.width = w + '%'; }
-    }, 50);
+    }, 45); // Slightly faster for excitement
 }
 function closeStory() { document.getElementById('story-viewer').style.display = 'none'; clearInterval(sTimer); }
 
