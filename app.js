@@ -1,12 +1,12 @@
 const posts = [
-    { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c', cap: 'Architecture Research: Modern glass facades can reduce lighting costs by 30%.' },
+    { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c', cap: 'Architecture: Modernist glass facades increase property value by 20%.' },
     { user: 'principal_srikanth', img: 'https://images.unsplash.com/photo-1507537297725-24a1c029d3ca', cap: 'Study Note: Logic is the foundation of design. #CAT2026' }
 ];
 
 function init() {
     renderStories();
     renderFeed();
-    lucide.createIcons(); // Initialize the icons
+    lucide.createIcons();
 }
 
 function renderStories() {
@@ -50,15 +50,15 @@ function doLike(container, id) {
     heart.classList.add('pop-active');
     setTimeout(() => heart.classList.remove('pop-active'), 800);
     
-    // Auto-turn the small heart red
+    // Auto-fill small heart
     const heartIcon = document.getElementById(`like-${id}`);
-    heartIcon.classList.add('liked');
+    heartIcon.classList.add('liked-red');
     lucide.createIcons();
 }
 
 function toggleLike(id) {
     const icon = document.getElementById(`like-${id}`);
-    icon.classList.toggle('liked');
+    icon.classList.toggle('liked-red');
     lucide.createIcons();
 }
 
