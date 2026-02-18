@@ -1,30 +1,56 @@
-let state = JSON.parse(localStorage.getItem('principalData')) || {
-    revenue: 0, goal: 500000, tasks: { task1: false, task2: false, task3: false }, history: []
-};
-function init() { render(); }
-function addRevenue(amount) { state.revenue += amount; save(); }
-function toggleTask(id) { state.tasks[id] = !state.tasks[id]; save(); }
-function sealDay() {
-    const today = new Date().toLocaleDateString();
-    const tasksDone = Object.values(state.tasks).filter(v => v).length;
-    state.history.unshift({ date: today, revenue: state.revenue, tasksDone: tasksDone, success: tasksDone === 3 });
-    state.tasks = { task1: false, task2: false, task3: false };
-    save();
+// Add 'notes: []' to your initial state if it's not there
+if (!state.notes) state.notes = [];
+
+function showView(viewName) {
+    document.getElementById('home-view').style.display = viewName === 'home' ? 'block' : 'none';
+    document.getElementById('library-view').style.display = viewName === 'library' ? 'block' : 'none';
+    
+    // Update nav icons
+    const navs = document.querySelectorAll('.nav-item');
+    navs[0].classList.toggle('active', viewName === 'home');
+    navs[1].classList.toggle('active', viewName === 'library');
+    
+    if(viewName === 'library') renderLibrary();
 }
-function save() { localStorage.setItem('principalData', JSON.stringify(state)); render(); }
-function render() {
-    const percent = Math.min((state.revenue / state.goal) * 100, 100);
-    document.getElementById('revenue-bar').style.width = percent + "%";
-    document.getElementById('revenue-percent').innerText = Math.round(percent) + "%";
-    for (let id in state.tasks) {
-        const btn = document.getElementById(id);
-        if (btn) state.tasks[id] ? btn.classList.add('completed') : btn.classList.remove('completed');
-    }
-    document.getElementById('growth-timeline').innerHTML = state.history.map(day => `
-        <div class="history-card ${day.success ? 'perfect' : ''}">
-            <div><small>${day.date}</small><br><b>₹${day.revenue.toLocaleString()}</b></div>
-            <span>${day.tasksDone}/3 Tasks</span>
+
+function saveStudyNote() {
+    const subject = document.getElementById('study-subject').value;
+    const summary = document.getElementById('study-summary').value;
+    const question = document.getElementById('study-question').value;
+    const confidence = document.getElementById('study-confidence').value;
+
+    if(!summary) return alert("Summarize it first, Principal!");
+
+    const aiComments = {
+        CAT: "Math is the language of profit. Solve another tomorrow.",
+        IELTS: "Your global stage awaits. Speak clearly!",
+        News: "Policy knowledge is power in architecture."
+    };
+
+    const newNote = {
+        id: Date.now(),
+        date: new Date().toLocaleDateString(),
+        subject, summary, question, confidence,
+        aiHint: aiComments[subject] + (confidence < 5 ? " Focus harder on this one." : " Looking sharp!")
+    };
+
+    state.notes.unshift(newNote);
+    save(); // Existing save function
+    
+    // Clear inputs
+    document.getElementById('study-summary').value = "";
+    document.getElementById('study-question').value = "";
+    renderLibrary();
+}
+
+function renderLibrary() {
+    const feed = document.getElementById('study-feed');
+    feed.innerHTML = state.notes.map(note => `
+        <div class="study-card">
+            <i>${note.date} - ${note.subject} (Conf: ${note.confidence}/10)</i>
+            <p><b>Summary:</b> ${note.summary}</p>
+            <p><b>Question:</b> ${note.question}</p>
+            <div class="ai-response">🤖 ${note.aiHint}</div>
         </div>
     `).join('');
 }
-window.onload = init;
