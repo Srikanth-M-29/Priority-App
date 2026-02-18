@@ -89,17 +89,31 @@ function openStory(icon) {
     const data = storyData[icon];
     const viewer = document.getElementById('story-viewer');
     const bar = document.getElementById('story-progress-bar');
+    const sImg = document.getElementById('story-img');
+    const sLink = document.getElementById('story-link');
+
     document.getElementById('story-category-name').innerText = icon + " Insights";
     document.getElementById('story-title').innerText = data.title;
     document.getElementById('story-detail').innerText = data.detail;
+
+    // Handle Image
+    if (data.img) {
+        sImg.src = data.img;
+        sImg.style.display = 'block';
+    } else {
+        sImg.style.display = 'none';
+    }
+
+    // Handle Link
+    if (data.link) {
+        sLink.href = data.link;
+        sLink.style.display = 'inline-block';
+    } else {
+        sLink.style.display = 'none';
+    }
+
     viewer.style.display = 'flex';
-    bar.style.width = '0%';
-    let width = 0;
-    clearInterval(storyTimer);
-    storyTimer = setInterval(() => {
-        if (width >= 100) { closeStory(); } 
-        else { width++; bar.style.width = width + '%'; }
-    }, 50); 
+    // ... (keep your existing timer/progress bar code here)
 }
 
 function closeStory() {
