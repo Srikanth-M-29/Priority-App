@@ -135,21 +135,73 @@ function openChat(m) {
 }
 function closeChat() { document.getElementById('chat-window').style.display = 'none'; }
 
+// --- THE ADVANCED MENTOR ENGINE ---
+
 function sendMessage() {
     const inp = document.getElementById('user-msg');
     const box = document.getElementById('chat-box');
-    const userText = inp.value.trim().toLowerCase();
+    const userText = inp.value.trim();
     if(!userText) return;
-    box.innerHTML += `<div class="msg user">${inp.value}</div>`;
-    let reply = "Focus on the core principle. How does this solve a real-world problem?";
-    if(userText.includes('revise')) {
-        if(studyNotes.length > 0) {
-            const last = studyNotes[studyNotes.length - 1];
-            reply = `Your last note: "${last.text}". How does this apply to your project?`;
-        } else { reply = "Take a note in a story first!"; }
-    }
-    setTimeout(() => { box.innerHTML += `<div class="msg ai">${reply}</div>`; box.scrollTop = box.scrollHeight; }, 600);
+
+    box.innerHTML += `<div class="msg user">${userText}</div>`;
+    
+    // We pass your message AND your saved notes to the brain
+    const reply = getAIResponse(userText, activeMentor);
+
+    setTimeout(() => {
+        box.innerHTML += `<div class="msg ai">${reply}</div>`;
+        box.scrollTop = box.scrollHeight;
+    }, 600);
     inp.value = "";
+}
+
+function getAIResponse(input, mentor) {
+    const msg = input.toLowerCase();
+    
+    if (mentor === 'Archi-Intel') {
+        // 1. Check if asking for revision of data
+        if (msg.includes('revise') || msg.includes('analyze') || msg.includes('notes')) {
+            return analyzeMyData();
+        }
+
+        // 2. Simulated "Generative" Architecture Logic
+        if (msg.includes('minimalism') || msg.includes('modern')) {
+            return "Minimalism isn't just an aesthetic; it's a structural discipline. In your projects, are you achieving it through 'subtraction' (hiding elements) or 'honesty' (leaving structure exposed)? The latter is much harder to execute in the Indian climate.";
+        }
+        if (msg.includes('client') || msg.includes('business')) {
+            return "Architecture is 50% design and 50% psychology. If a client wants more F.A.R. but less 'mass,' you need to pitch 'Vertical Porosity.' It satisfies the ego and the environment.";
+        }
+        if (msg.includes('site') || msg.includes('context')) {
+            return "Context is king. A building in Nellore cannot breathe like a building in Tokyo. Are you looking at 'Passive Cooling' or just relying on HVAC? As your mentor, I suggest the former for your 2026 portfolio.";
+        }
+        
+        return "That's a valid design inquiry. Looking at it as a Principal Architect: How does this specific decision impact the 'User Experience' over a 10-year period? Think about durability and maintenance.";
+    } 
+
+    if (mentor === 'CAT-alyst') {
+        if (msg.includes('logic') || msg.includes('math') || msg.includes('quiz')) {
+            return "Let's do a Reading Comprehension (RC) check: Based on the ArchDaily posts in your feed, summarize the 'Main Idea' in one sentence. This is the #1 skill for CAT 99th percentile.";
+        }
+        return "To master the CAT, stop memorizing and start 'Inferring.' Every news post in your feed is a potential RC passage. Try to find the 'Author's Tone' in the business news above.";
+    }
+}
+
+function analyzeMyData() {
+    if (studyNotes.length === 0) return "My 'brain' is ready, but your 'log' is empty. Go take a note on a post first so I have data to analyze!";
+    
+    const lastNote = studyNotes[studyNotes.length - 1].text;
+    const context = studyNotes[studyNotes.length - 1].context;
+
+    // The "Analysis" Step
+    let analysis = `I am analyzing your note on **${context}**. You mentioned: "${lastNote}". <br><br>`;
+    
+    if (lastNote.length < 10) {
+        analysis += "Critique: This note is too short. To grow, you need to write about the *Structural Intent*. Why did the architect choose this form?";
+    } else {
+        analysis += "Expert Insight: This aligns with 'Critical Regionalism.' You're connecting global design to local needs. For your CAT prep, try to calculate the 'Cost-to-Utility' ratio of this design decision.";
+    }
+    
+    return analysis;
 }
 
 function openUpload() { document.getElementById('upload-modal').style.display = 'block'; }
